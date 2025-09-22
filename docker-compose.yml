@@ -1,0 +1,38 @@
+services:
+  secret-backend:
+    container_name: secret-backend
+    build:
+      context: ./secret-backend
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    env_file:
+      - ./secret-backend/.env
+    depends_on:
+      - postgres
+
+  secret-frontend:
+    container_name: secret-frontend
+    build:
+      context: ./secret-frontend
+      dockerfile: Dockerfile
+    ports:
+      - 5173:5173
+    env_file:
+      - ./secret-frontend/.env
+
+  postgres:
+    image: postgres:15
+    container_name: secret-postgres-db
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - secret_service_postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: 1234567890
+      POSTGRES_DB: secret-service-postgres-db
+
+volumes:
+  secret_service_postgres_data:
