@@ -1,0 +1,1 @@
+export const CONNECTION = 'PG_CONNECTION';
