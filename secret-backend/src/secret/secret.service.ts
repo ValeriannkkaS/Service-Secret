@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateSecretDto } from '../dto/create-secret.dto';
 import { CONNECTION } from '../constants/constansts';
 import { CryptoService } from '../crypto/crypto.service';
@@ -11,12 +11,40 @@ export class SecretService {
   ) {}
 
   async setSecretPhrase(secretDto: CreateSecretDto) {
-    return this.cryptoService.decryptSecretPhrase(
-      'LxdDL7xqekTB/GF39g==',
-      'Ap2n16Hx2DP5ElVZDqzz0A==',
-    );
+    const client = await this.connection.connect();
 
-    return this.cryptoService.encryptSecretPhrase(secretDto.secretPhrase);
+    try {
+      const { secretPhrase, availableViews, expiresInTimestamp } = secretDto;
+
+      const { encryptedTextBase64, ivBase64 } =
+        await this.cryptoService.encryptSecretPhrase(secretPhrase);
+
+      const link = await this.cryptoService.generateUniqueLink();
+      if (!link) {
+      }
+      const expiresAt = new Date(Date.now() + expiresInTimestamp);
+
+      const queryText = `INSERT INTO secret_table(encrypted_value, iv, link, expires_at, remaining_views_count) VALUES ($1, $2, $3, $4, $5)`;
+      const insertValues = [
+        encryptedTextBase64,
+        ivBase64,
+        link,
+        expiresAt,
+        availableViews,
+      ];
+
+      const result = await client.query(queryText, insertValues);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw new HttpException(
+        'failed to insert value',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } finally {
+      client.release();
+    }
   }
 
   getSecretPhraseByLink(link: string) {}

@@ -1,38 +1,67 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import {
   randomUUID,
   createCipheriv,
   createDecipheriv,
   randomBytes,
-  scrypt,
 } from 'crypto';
-import { promisify } from 'util';
 import { ConfigService } from '@nestjs/config';
+import { CONNECTION } from '../constants/constansts';
 
 @Injectable()
 export class CryptoService {
-  constructor(private configService: ConfigService) {}
+  constructor(
+    @Inject(CONNECTION) private connection: any,
+    private configService: ConfigService,
+  ) {}
 
-  generateUniqueLink() {
-    return randomUUID().toString();
+  async generateUniqueLink() {
+    const client = await this.connection.connect();
+    const link = randomUUID().toString();
+    const queryText = 'SELECT * FROM secret_table WHERE link = $1';
+    try {
+      const result = await this.connection.query(queryText, [link]);
+      if (result.rows.length > 0) {
+        throw new Error();
+      }
+      return link;
+    } catch (error) {
+      throw new HttpException(
+        'failed to generate unique link',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } finally {
+      client.release();
+    }
   }
+
   async encryptSecretPhrase(phrase: string) {
-    const iv = randomBytes(16);
-    const ivBase64 = iv.toString('base64');
+    try {
+      const iv = randomBytes(16);
+      const ivBase64 = iv.toString('base64');
 
-    const keyBase64 = this.configService.get<string>('CRYPTO_KEY') || 'ss';
-    const key = Buffer.from(keyBase64, 'base64');
+      const keyBase64 = this.configService.get<string>('CRYPTO_KEY') || 'ss';
+      const key = Buffer.from(keyBase64, 'base64');
 
-    const cipher = createCipheriv('aes-256-ctr', key, iv);
+      const cipher = createCipheriv('aes-256-ctr', key, iv);
 
-    const encryptedText = Buffer.concat([
-      cipher.update(phrase),
-      cipher.final(),
-    ]);
+      const encryptedText = Buffer.concat([
+        cipher.update(phrase),
+        cipher.final(),
+      ]);
 
-    const encryptedTextBase64 = encryptedText.toString('base64');
+      const encryptedTextBase64 = encryptedText.toString('base64');
 
-    return { encryptedTextBase64: encryptedTextBase64, ivBase64: ivBase64 };
+      return { encryptedTextBase64: encryptedTextBase64, ivBase64: ivBase64 };
+    } catch (error) {
+      throw new ConflictException(error.message);
+    }
   }
 
   async decryptSecretPhrase(encryptedPhraseBase64: string, ivBase64: string) {

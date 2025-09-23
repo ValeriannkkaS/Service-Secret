@@ -1,5 +1,5 @@
 export class CreateSecretDto {
   readonly secretPhrase: string;
-  readonly expiresIn: Date;
+  readonly expiresInTimestamp: number;
   readonly availableViews: number;
 }
