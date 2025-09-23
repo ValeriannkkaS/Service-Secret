@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateSecretDto } from '../dto/create-secret.dto';
 import { CONNECTION } from '../constants/constansts';
-import { CryptoService } from '../link/crypto.service';
+import { CryptoService } from '../crypto/crypto.service';
 
 @Injectable()
 export class SecretService {

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PgModule } from './pg/pg.module';
 import { SecretModule } from './secret/secret.module';
-import { CryptoModule } from './link/crypto.module';
+import { CryptoModule } from './crypto/crypto.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
