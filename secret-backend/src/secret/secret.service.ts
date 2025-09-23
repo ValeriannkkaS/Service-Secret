@@ -24,7 +24,7 @@ export class SecretService {
       }
       const expiresAt = new Date(Date.now() + expiresInTimestamp);
 
-      const queryText = `INSERT INTO secret_table(encrypted_value, iv, link, expires_at, remaining_views_count) VALUES ($1, $2, $3, $4, $5)`;
+      const queryText = `INSERT INTO secret_table(encrypted_value, iv, link, expires_at, remaining_views_count) VALUES ($1, $2, $3, $4, $5) RETURNING link`;
       const insertValues = [
         encryptedTextBase64,
         ivBase64,
@@ -35,7 +35,7 @@ export class SecretService {
 
       const result = await client.query(queryText, insertValues);
       await client.query('COMMIT');
-      return result;
+      return result.rows[0];
     } catch (error) {
       await client.query('ROLLBACK');
       throw new HttpException(
