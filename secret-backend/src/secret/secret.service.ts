@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateSecretDto } from '../dto/create-secret.dto';
 import { CONNECTION } from '../constants/constansts';
 import { CryptoService } from '../crypto/crypto.service';
+import { GetByLinkInterface } from '../interfaces/getByLinkInterface';
 
 @Injectable()
 export class SecretService {
@@ -47,5 +48,51 @@ export class SecretService {
     }
   }
 
-  getSecretPhraseByLink(link: string) {}
+  async getSecretPhraseByLink(link: string) {
+    const client = await this.connection.connect();
+    try {
+      const queryText = 'SELECT * FROM secret_table WHERE link = $1';
+      const result = await client.query(queryText, [link]);
+
+      const info: GetByLinkInterface | undefined = result.rows[0];
+
+      if (!info) {
+        throw new HttpException(
+          'failed to get secret phrase',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      let {
+        iv,
+        remaining_views_count: remainingViewsCount,
+        encrypted_value: encryptedValue,
+        expires_at: expiresIn,
+      } = info;
+
+      if (remainingViewsCount <= 0 || !expiresIn || expiresIn < new Date()) {
+        const queryText = 'DELETE FROM secret_table WHERE link = $1';
+        const deletedPhrase = await client.query(queryText, [link]);
+        throw new HttpException(
+          'the number of requests or the available time for requests has been exhausted',
+          HttpStatus.FORBIDDEN,
+        );
+      }
+
+      const encryptedPhrase = await this.cryptoService.decryptSecretPhrase(
+        encryptedValue,
+        iv,
+      );
+      remainingViewsCount--;
+
+      const updateQueryText =
+        'UPDATE secret_table SET remaining_views_count = $1 WHERE link = $2';
+      await client.query(updateQueryText, [remainingViewsCount, link]);
+
+      return encryptedPhrase;
+    } catch (error) {
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 }

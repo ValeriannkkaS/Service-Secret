@@ -65,20 +65,24 @@ export class CryptoService {
   }
 
   async decryptSecretPhrase(encryptedPhraseBase64: string, ivBase64: string) {
-    const encryptedPhrase = Buffer.from(encryptedPhraseBase64, 'base64');
-    const iv = Buffer.from(ivBase64, 'base64');
+    try {
+      const encryptedPhrase = Buffer.from(encryptedPhraseBase64, 'base64');
+      const iv = Buffer.from(ivBase64, 'base64');
 
-    const keyBase64 =
-      (await this.configService.get<string>('CRYPTO_KEY')) || 'ss';
-    const key = Buffer.from(keyBase64, 'base64');
+      const keyBase64 =
+        (await this.configService.get<string>('CRYPTO_KEY')) || 'ss';
+      const key = Buffer.from(keyBase64, 'base64');
 
-    const decipher = createDecipheriv('aes-256-ctr', key, iv);
+      const decipher = createDecipheriv('aes-256-ctr', key, iv);
 
-    const decryptedText = Buffer.concat([
-      decipher.update(encryptedPhrase),
-      decipher.final(),
-    ]);
+      const decryptedText = Buffer.concat([
+        decipher.update(encryptedPhrase),
+        decipher.final(),
+      ]);
 
-    return decryptedText.toString('utf-8');
+      return decryptedText.toString('utf-8');
+    } catch (error) {
+      throw new ConflictException(error.message);
+    }
   }
 }

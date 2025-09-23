@@ -11,7 +11,7 @@ export class SecretController {
     return this.secretService.setSecretPhrase(secretDto);
   }
 
-  @Get('/:crypto')
+  @Get('/:link')
   getSecretPhraseByLink(@Param('link') link: string) {
     return this.secretService.getSecretPhraseByLink(link);
   }
