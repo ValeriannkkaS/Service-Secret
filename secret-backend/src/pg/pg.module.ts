@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { Pool } from 'pg';
 import { CONNECTION } from '../constants/constansts';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PgService } from './pg.service';
 
 @Global()
 @Module({
@@ -21,7 +22,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         return pool;
       },
     },
+    PgService,
   ],
-  exports: [CONNECTION],
+  exports: [CONNECTION, PgService],
 })
 export class PgModule {}

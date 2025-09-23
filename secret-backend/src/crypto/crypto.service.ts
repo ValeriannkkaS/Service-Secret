@@ -13,31 +13,34 @@ import {
 } from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { CONNECTION } from '../constants/constansts';
+import { PgService } from '../pg/pg.service';
 
 @Injectable()
 export class CryptoService {
   constructor(
-    @Inject(CONNECTION) private connection: any,
+    @Inject(PgService) private pgService: PgService,
     private configService: ConfigService,
   ) {}
 
   async generateUniqueLink() {
-    const client = await this.connection.connect();
     const link = randomUUID().toString();
-    const queryText = 'SELECT * FROM secret_table WHERE link = $1';
     try {
-      const result = await this.connection.query(queryText, [link]);
-      if (result.rows.length > 0) {
-        throw new Error();
+      const result = await this.pgService.findOne(
+        'secret_table',
+        '*',
+        'link',
+        link,
+      );
+
+      if (result) {
+        throw new HttpException(
+          'failed to generate unique link',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
       }
       return link;
     } catch (error) {
-      throw new HttpException(
-        'failed to generate unique link',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    } finally {
-      client.release();
+      throw error;
     }
   }
 
@@ -60,7 +63,10 @@ export class CryptoService {
 
       return { encryptedTextBase64: encryptedTextBase64, ivBase64: ivBase64 };
     } catch (error) {
-      throw new ConflictException(error.message);
+      throw new HttpException(
+        'failed to encrypt phrase',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -82,7 +88,10 @@ export class CryptoService {
 
       return decryptedText.toString('utf-8');
     } catch (error) {
-      throw new ConflictException(error.message);
+      throw new HttpException(
+        'failed to decrypt phrase',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

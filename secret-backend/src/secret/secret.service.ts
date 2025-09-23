@@ -3,17 +3,16 @@ import { CreateSecretDto } from './dto/create-secret.dto';
 import { CONNECTION } from '../constants/constansts';
 import { CryptoService } from '../crypto/crypto.service';
 import { GetByLinkInterface } from '../interfaces/getByLinkInterface';
+import { PgService } from '../pg/pg.service';
 
 @Injectable()
 export class SecretService {
   constructor(
-    @Inject(CONNECTION) private connection: any,
     @Inject(CryptoService) private cryptoService: CryptoService,
+    @Inject(PgService) private pgService: PgService,
   ) {}
 
   async setSecretPhrase(secretDto: CreateSecretDto) {
-    const client = await this.connection.connect();
-
     try {
       const { secretPhrase, availableViews, expiresInTimestamp } = secretDto;
 
@@ -25,41 +24,32 @@ export class SecretService {
       }
       const expiresAt = new Date(Date.now() + expiresInTimestamp);
 
-      const queryText = `INSERT INTO secret_table(encrypted_value, iv, link, expires_at, remaining_views_count) VALUES ($1, $2, $3, $4, $5) RETURNING link`;
-      const insertValues = [
-        encryptedTextBase64,
-        ivBase64,
-        link,
-        expiresAt,
-        availableViews,
-      ];
-
-      const result = await client.query(queryText, insertValues);
-      await client.query('COMMIT');
-      return result.rows[0];
+      const insertValues = {
+        encrypted_value: encryptedTextBase64,
+        iv: ivBase64,
+        link: link,
+        expires_at: expiresAt,
+        remaining_views_count: availableViews,
+      };
+      return await this.pgService.insert('secret_table', insertValues, 'link');
     } catch (error) {
-      await client.query('ROLLBACK');
-      throw new HttpException(
-        'failed to insert value',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    } finally {
-      client.release();
+      throw error;
     }
   }
 
   async getSecretPhraseByLink(link: string) {
-    const client = await this.connection.connect();
     try {
-      const queryText = 'SELECT * FROM secret_table WHERE link = $1';
-      const result = await client.query(queryText, [link]);
-
-      const info: GetByLinkInterface | undefined = result.rows[0];
+      const info: GetByLinkInterface = await this.pgService.findOne(
+        'secret_table',
+        '*',
+        'link',
+        link,
+      );
 
       if (!info) {
         throw new HttpException(
-          'failed to get secret phrase',
-          HttpStatus.NOT_FOUND,
+          'failed to get secret phrase (secret phrase already destroyed or link is invalid)',
+          HttpStatus.BAD_REQUEST,
         );
       }
       let {
@@ -70,8 +60,8 @@ export class SecretService {
       } = info;
 
       if (remainingViewsCount <= 0 || !expiresIn || expiresIn < new Date()) {
-        const queryText = 'DELETE FROM secret_table WHERE link = $1';
-        const deletedPhrase = await client.query(queryText, [link]);
+        await this.pgService.findOneAndDelete('secret_table', 'link', link);
+
         throw new HttpException(
           'the number of requests or the available time for requests has been exhausted',
           HttpStatus.FORBIDDEN,
@@ -84,15 +74,17 @@ export class SecretService {
       );
       remainingViewsCount--;
 
-      const updateQueryText =
-        'UPDATE secret_table SET remaining_views_count = $1 WHERE link = $2';
-      await client.query(updateQueryText, [remainingViewsCount, link]);
+      await this.pgService.findOneAndUpdate(
+        'secret_table',
+        'remaining_views_count',
+        remainingViewsCount,
+        'link',
+        link,
+      );
 
       return encryptedPhrase;
     } catch (error) {
       throw error;
-    } finally {
-      client.release();
     }
   }
 }
