@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseUUIDPipe,
   Post,
@@ -15,6 +17,7 @@ export class SecretController {
   constructor(private readonly secretService: SecretService) {}
 
   @Post('/create-secret-phrase')
+  @HttpCode(HttpStatus.CREATED)
   setSecretPhrase(
     @Body(new CreateSecretPhrasePipe()) secretDto: CreateSecretDto,
   ) {
@@ -22,6 +25,7 @@ export class SecretController {
   }
 
   @Get('/:link')
+  @HttpCode(HttpStatus.OK)
   getSecretPhraseByLink(@Param('link', new ParseUUIDPipe()) link: string) {
     return this.secretService.getSecretPhraseByLink(link);
   }

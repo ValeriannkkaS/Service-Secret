@@ -8,8 +8,9 @@ export class PgService {
   async findOneAndDelete(table: string, where: unknown, what: unknown) {
     const client = await this.connection.connect();
     try {
-      const queryText = `DELETE FROM ${table} WHERE ${where} = $1`;
+      const queryText = `DELETE FROM ${table} WHERE ${where} = $1 RETURNING ${where}`;
       const result = await client.query(queryText, [what]);
+      console.log(result);
       return result.rows[0];
     } catch (err) {
       throw new HttpException(
@@ -43,6 +44,22 @@ export class PgService {
     }
   }
 
+  async findExpiredEntries(table: string, field: string) {
+    const client = await this.connection.connect();
+    try {
+      const queryText = `SELECT ${field} FROM ${table} WHERE expires_at < NOW()`;
+      const result = await client.query(queryText);
+      return result.rows;
+    } catch (err) {
+      throw new HttpException(
+        'failed to find expired entries entry',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } finally {
+      client.release();
+    }
+  }
+
   async findOne(
     table: string,
     field: string = '*',
@@ -63,6 +80,7 @@ export class PgService {
       client.release();
     }
   }
+
   async insert(table: string, insertValues: object, returning: string = '*') {
     const client = await this.connection.connect();
     try {
