@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { CreateSecretDto } from '../dto/create-secret.dto';
+import { CreateSecretDto } from './dto/create-secret.dto';
 import { SecretService } from './secret.service';
 
 @Controller('/secret')
