@@ -43,7 +43,7 @@ async function generateSecret() {
     const response = await SecretServices.generateSecretPhrase(countOfSymbols.value)
     secretPhrase.value = response
   } catch (error) {
-    error.value = 'ошибка генерирования секретной фразы'
+    error.value = 'Ошибка генерирования секретной фразы'
   }
 }
 </script>

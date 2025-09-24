@@ -14,8 +14,12 @@ export default class SecretServices {
   }
 
   static async getSecretPhrase(link: string) {
-    const response = await $api.get(`/${link}`)
-    return response.data
+    try {
+      const response = await $api.get(`/${link}`)
+      return response.data
+    } catch (error) {
+      throw error
+    }
   }
 
   static async generateSecretPhrase(length: number) {
