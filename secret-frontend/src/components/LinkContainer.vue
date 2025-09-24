@@ -6,7 +6,6 @@ const props = defineProps<{
 }>()
 
 const fullLink = computed(() => `http://localhost:5173/${props.link}`)
-console.log(fullLink)
 </script>
 
 <template>

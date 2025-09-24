@@ -25,19 +25,27 @@ async function setSecretPhrase() {
     error.value = 'Введите или сгенерируйте секретную фразу'
     return
   }
-  const secretDto = {
-    secretPhrase: secretPhrase.value,
-    expiresInTimestamp: expiresIn.value,
-    availableViews: countOfViews.value,
+  try {
+    const secretDto = {
+      secretPhrase: secretPhrase.value,
+      expiresInTimestamp: expiresIn.value,
+      availableViews: countOfViews.value,
+    }
+    const response = await SecretServices.createSecret(secretDto)
+    link.value = response.data.link
+  } catch (e) {
+    error.value = 'Что-то пошло не так, попробуйте позднее'
   }
-  console.log(secretDto)
-  const response = await SecretServices.createSecret(secretDto)
-  console.log(response)
-
-  link.value = response.link
 }
 
-function generateSecret() {}
+async function generateSecret() {
+  try {
+    const response = await SecretServices.generateSecretPhrase(countOfSymbols.value)
+    secretPhrase.value = response
+  } catch (error) {
+    error.value = 'ошибка генерирования секретной фразы'
+  }
+}
 </script>
 
 <template>
