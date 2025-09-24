@@ -8,7 +8,11 @@ import {
 @Injectable()
 export class CreateSecretPhrasePipe implements PipeTransform {
   transform(value: any): any {
-    if (!value.secretPhrase || typeof value.secretPhrase !== 'string') {
+    if (
+      !value.secretPhrase ||
+      typeof value.secretPhrase !== 'string' ||
+      value.secretPhrase.length === ''
+    ) {
       throw new BadRequestException(
         `Invalid secret phrase: ${value.secretPhrase}`,
       );

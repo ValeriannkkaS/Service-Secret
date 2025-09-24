@@ -12,7 +12,6 @@ import {
   randomBytes,
 } from 'crypto';
 import { ConfigService } from '@nestjs/config';
-import { CONNECTION } from '../constants/constansts';
 import { PgService } from '../pg/pg.service';
 
 @Injectable()
@@ -42,6 +41,10 @@ export class CryptoService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async generateSecret(length: number) {
+    return randomBytes(length).toString('hex').slice(0, length);
   }
 
   async encryptSecretPhrase(phrase: string) {
