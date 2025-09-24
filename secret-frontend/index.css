@@ -2,8 +2,13 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
 }
 #app{
   font-family: 'Poppins', sans-serif;
   height: 100vh;
+}
+h1{
+  font-weight: bold;
+  color: #525252;
 }

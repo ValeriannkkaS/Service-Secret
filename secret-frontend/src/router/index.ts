@@ -4,8 +4,8 @@ import SecretForm from '@/components/forms/SecretForm.vue'
 import SecretPhraseResponse from '@/components/SecretPhraseResponse.vue'
 
 const routes = [
-  { path: '/secret', component: SecretForm },
-  { path: '/secret/:link', component: SecretPhraseResponse },
+  { path: '/', component: SecretForm },
+  { path: '/:link', component: SecretPhraseResponse },
 ]
 
 const router = createRouter({

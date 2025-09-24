@@ -1,0 +1,29 @@
+<script setup lang="ts">
+import type { optionForSelect } from '@/optionsForSelect/optionsForSelect.ts'
+
+const model = defineModel()
+
+defineProps<{
+  options: optionForSelect[]
+}>()
+</script>
+
+<template>
+  <select v-model="model">
+    <option v-for="option in options" :value="option.value" :key="option.id">
+      {{ option.text }}
+    </option>
+  </select>
+</template>
+
+<style scoped>
+select {
+  width: 230px;
+  height: 40px;
+  border-radius: 0.7rem;
+  transition: 0.3s all;
+}
+option {
+  background: #dddddd;
+}
+</style>

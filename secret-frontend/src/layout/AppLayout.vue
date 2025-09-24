@@ -2,7 +2,9 @@
 
 <template>
   <div class="background">
-    <div class="form-secret-phrase-container"></div>
+    <div class="form-secret-phrase-container">
+      <RouterView />
+    </div>
   </div>
 </template>
 
@@ -15,11 +17,11 @@
 .form-secret-phrase-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   min-width: 800px;
   min-height: 500px;
-  width: 50vw;
+  width: 65vw;
   height: 50vh;
   margin: 0 auto;
   transform: translateY(50%);
