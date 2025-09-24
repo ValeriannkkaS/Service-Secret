@@ -5,29 +5,53 @@ import {
   optionsCountOfSymbols,
   optionsCountOfViews,
   optionsExpiresIn,
-} from '@/optionsForSelect/optionsForSelect.js'
-import { ref } from 'vue'
+} from '@/constants&interfaces/optionsForSelect.js'
+import { ref, computed } from 'vue'
+import SecretServices from '@/services/secret-services.js'
+import LinkContainer from '@/components/LinkContainer.vue'
+import Help from '@/components/forms/Help.vue'
 
+const link = ref(null)
+const error = ref(null)
+const secretPhrase = ref('')
 const countOfViews = ref(1)
 const countOfSymbols = ref(8)
 const expiresIn = ref(86400000)
 
-function setSecretPhrase() {}
+const errorText = computed(() => (secretPhrase.value ? null : error.value))
+
+async function setSecretPhrase() {
+  if (!secretPhrase.value) {
+    error.value = 'Введите или сгенерируйте секретную фразу'
+    return
+  }
+  const secretDto = {
+    secretPhrase: secretPhrase.value,
+    expiresInTimestamp: expiresIn.value,
+    availableViews: countOfViews.value,
+  }
+  console.log(secretDto)
+  const response = await SecretServices.createSecret(secretDto)
+  console.log(response)
+
+  link.value = response.link
+}
 
 function generateSecret() {}
 </script>
 
 <template>
-  <form class="form-container">
+  <form class="form-container" @submit.prevent="setSecretPhrase">
     <div class="left-form-part">
-      <input type="text" />
+      <Help v-if="errorText" :error="errorText"></Help>
+      <input v-model="secretPhrase" type="text" />
       <div></div>
-      <MainButton class="medium" :on-click="setSecretPhrase">Передать!</MainButton>
+      <MainButton class="medium" type="submit">Передать!</MainButton>
     </div>
     <div class="divider"></div>
     <div class="right-form-part">
       <div class="right-form-part-options-container">
-        <MainButton :on-click="generateSecret">Сгенерировать</MainButton>
+        <MainButton :on-click="generateSecret" type="button">Сгенерировать</MainButton>
         <Select v-model="countOfSymbols" :options="optionsCountOfSymbols"></Select>
       </div>
       <p>Удалить пароль и сслыку спустя (что наступит раньше):</p>
@@ -37,6 +61,7 @@ function generateSecret() {}
       </div>
     </div>
   </form>
+  <LinkContainer v-if="link" :link="link">ссылка</LinkContainer>
 </template>
 
 <style scoped>

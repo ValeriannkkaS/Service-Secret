@@ -1,8 +1,4 @@
-export interface optionForSelect {
-  id: number
-  text: string
-  value: number
-}
+import type { optionForSelect } from '@/constants&interfaces/interfaces.ts'
 
 export const optionsCountOfSymbols: optionForSelect[] = [
   {

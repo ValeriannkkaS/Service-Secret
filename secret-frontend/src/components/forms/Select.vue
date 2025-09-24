@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { optionForSelect } from '@/optionsForSelect/optionsForSelect.ts'
+import type { optionForSelect } from '@/constants&interfaces/interfaces'
 
 const model = defineModel()
 
