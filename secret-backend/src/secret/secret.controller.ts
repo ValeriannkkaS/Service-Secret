@@ -13,6 +13,7 @@ import { CreateSecretDto } from './dto/create-secret.dto';
 import { SecretService } from './secret.service';
 import { CreateSecretPhrasePipe } from '../pipes/create-secret-phrase.pipe';
 import { CryptoService } from '../crypto/crypto.service';
+import { createSecretPhraseShema } from '../pipes/createSecretPhraseShema';
 
 @Controller('/secret')
 export class SecretController {
@@ -24,7 +25,8 @@ export class SecretController {
   @Post('/create-secret-phrase')
   @HttpCode(HttpStatus.CREATED)
   setSecretPhrase(
-    @Body(new CreateSecretPhrasePipe()) secretDto: CreateSecretDto,
+    @Body(new CreateSecretPhrasePipe(createSecretPhraseShema))
+    secretDto: CreateSecretDto,
   ) {
     return this.secretService.setSecretPhrase(secretDto);
   }

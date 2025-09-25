@@ -13,82 +13,74 @@ export class SecretService {
   ) {}
 
   async setSecretPhrase(secretDto: CreateSecretDto) {
-    try {
-      const { secretPhrase, availableViews, expiresInTimestamp } = secretDto;
+    const { secretPhrase, availableViews, expiresInTimestamp } = secretDto;
 
-      const { encryptedTextBase64, ivBase64 } =
-        await this.cryptoService.encryptSecretPhrase(secretPhrase);
+    const { encryptedTextBase64, ivBase64 } =
+      await this.cryptoService.encryptSecretPhrase(secretPhrase);
 
-      const link = await this.cryptoService.generateUniqueLink();
-      if (!link) {
-      }
-      const expiresAt = new Date(Date.now() + expiresInTimestamp);
-
-      const insertValues = {
-        encrypted_value: encryptedTextBase64,
-        iv: ivBase64,
-        link: link,
-        expires_at: expiresAt,
-        remaining_views_count: availableViews,
-      };
-      return await this.pgService.insert('secret_table', insertValues, 'link');
-    } catch (error) {
-      throw error;
+    const link = await this.cryptoService.generateUniqueLink();
+    if (!link) {
     }
+    const expiresAt = new Date(Date.now() + expiresInTimestamp);
+
+    const insertValues = {
+      encrypted_value: encryptedTextBase64,
+      iv: ivBase64,
+      link: link,
+      expires_at: expiresAt,
+      remaining_views_count: availableViews,
+    };
+    return await this.pgService.insert('secret_table', insertValues, 'link');
   }
 
   async getSecretPhraseByLink(link: string) {
-    try {
-      const info: GetByLinkInterface = await this.pgService.findOne(
-        'secret_table',
-        '*',
-        'link',
-        link,
+    const info: GetByLinkInterface = await this.pgService.findOne(
+      'secret_table',
+      '*',
+      'link',
+      link,
+    );
+
+    if (!info) {
+      throw new HttpException(
+        'failed to get secret phrase (secret phrase already destroyed or link is invalid)',
+        HttpStatus.BAD_REQUEST,
       );
-
-      if (!info) {
-        throw new HttpException(
-          'failed to get secret phrase (secret phrase already destroyed or link is invalid)',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-      let {
-        iv,
-        remaining_views_count: remainingViewsCount,
-        encrypted_value: encryptedValue,
-        expires_at: expiresIn,
-      } = info;
-
-      if (remainingViewsCount <= 0 || !expiresIn || expiresIn < new Date()) {
-        await this.pgService.findOneAndDelete('secret_table', 'link', link);
-
-        throw new HttpException(
-          'the number of requests or the available time for requests has been exhausted',
-          HttpStatus.FORBIDDEN,
-        );
-      }
-
-      const encryptedPhrase = await this.cryptoService.decryptSecretPhrase(
-        encryptedValue,
-        iv,
-      );
-      remainingViewsCount--;
-
-      if (remainingViewsCount <= 0) {
-        await this.pgService.findOneAndDelete('secret_table', 'link', link);
-      }
-
-      await this.pgService.findOneAndUpdate(
-        'secret_table',
-        'remaining_views_count',
-        remainingViewsCount,
-        'link',
-        link,
-      );
-
-      return encryptedPhrase;
-    } catch (error) {
-      throw error;
     }
+    let {
+      iv,
+      remaining_views_count: remainingViewsCount,
+      encrypted_value: encryptedValue,
+      expires_at: expiresIn,
+    } = info;
+
+    if (remainingViewsCount <= 0 || !expiresIn || expiresIn < new Date()) {
+      await this.pgService.findOneAndDelete('secret_table', 'link', link);
+
+      throw new HttpException(
+        'the number of requests or the available time for requests has been exhausted',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const encryptedPhrase = await this.cryptoService.decryptSecretPhrase(
+      encryptedValue,
+      iv,
+    );
+    remainingViewsCount--;
+
+    if (remainingViewsCount <= 0) {
+      await this.pgService.findOneAndDelete('secret_table', 'link', link);
+    }
+
+    await this.pgService.findOneAndUpdate(
+      'secret_table',
+      'remaining_views_count',
+      remainingViewsCount,
+      'link',
+      link,
+    );
+
+    return encryptedPhrase;
   }
 }

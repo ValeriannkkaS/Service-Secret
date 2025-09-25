@@ -4,5 +4,5 @@ CREATE TABLE secret_table (
     iv TEXT NOT NULL ,
     link TEXT NOT NULL,
     expires_at TIMESTAMP WITH TIME ZONE,
-    remaining_views_count INTEGER DEFAULT 0,
+    remaining_views_count INTEGER DEFAULT 0
 );

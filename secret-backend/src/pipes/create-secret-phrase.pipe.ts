@@ -1,38 +1,17 @@
-import {
-  ArgumentMetadata,
-  BadRequestException,
-  Injectable,
-  PipeTransform,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
+import type { ObjectSchema } from 'joi';
 
 @Injectable()
 export class CreateSecretPhrasePipe implements PipeTransform {
+  constructor(private schema: ObjectSchema) {}
+
   transform(value: any): any {
-    if (
-      !value.secretPhrase ||
-      typeof value.secretPhrase !== 'string' ||
-      value.secretPhrase.length === ''
-    ) {
-      throw new BadRequestException(
-        `Invalid secret phrase: ${value.secretPhrase}`,
-      );
+    const { error } = this.schema.validate(value);
+
+    if (error) {
+      throw new BadRequestException(error.details[0].message);
     }
-    if (
-      (value.availableViews !== 1 &&
-        value.availableViews !== 3 &&
-        value.availableViews !== 5 &&
-        value.availableViews !== 10) ||
-      typeof value.availableViews !== 'number'
-    ) {
-      throw new BadRequestException(
-        `Invalid available views count: ${value.availableViews}`,
-      );
-    }
-    if (typeof value.expiresInTimestamp !== 'number') {
-      throw new BadRequestException(
-        `Invalid available views count: ${value.expiresInTimestamp}`,
-      );
-    }
+
     return value;
   }
 }
