@@ -4,8 +4,9 @@ import { computed } from 'vue'
 const props = defineProps<{
   link: string
 }>()
+const domain = window.location.host
 
-const fullLink = computed(() => `http://localhost:5173/${props.link}`)
+const fullLink = computed(() => `http://${domain}/${props.link}`)
 </script>
 
 <template>

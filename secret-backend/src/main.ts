@@ -13,6 +13,7 @@ async function bootstrap() {
   app.use(helmet());
   app.enableCors({
     origin: process.env.CLIENT_URL,
+    credentials: true,
     methods: ['GET', 'POST'],
   });
 

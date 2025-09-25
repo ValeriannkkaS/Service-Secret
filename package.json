@@ -10,6 +10,7 @@
     "dev": "concurrently -n frontend,backend -c green,blue -k \"npm run dev --workspace secret-frontend\" \"npm run start:dev --workspace secret-backend\""
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "cross-env": "^10.0.0"
   }
 }

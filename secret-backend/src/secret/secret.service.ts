@@ -74,6 +74,10 @@ export class SecretService {
       );
       remainingViewsCount--;
 
+      if (remainingViewsCount <= 0) {
+        await this.pgService.findOneAndDelete('secret_table', 'link', link);
+      }
+
       await this.pgService.findOneAndUpdate(
         'secret_table',
         'remaining_views_count',
