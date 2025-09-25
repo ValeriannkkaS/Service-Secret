@@ -1,15 +1,15 @@
 <script setup>
 import MainButton from '@/components/buttons/MainButton.vue'
-import Select from '@/components/forms/Select.vue'
+import Select from '@/components/inputs-helpers/Select.vue'
 import {
   optionsCountOfSymbols,
   optionsCountOfViews,
   optionsExpiresIn,
-} from '@/constants&interfaces/optionsForSelect.js'
+} from '@/constants&interfaces/optionsForSelect.ts'
 import { ref, computed } from 'vue'
-import SecretServices from '@/services/secret-services.js'
-import LinkContainer from '@/components/LinkContainer.vue'
-import Help from '@/components/forms/Help.vue'
+import SecretServices from '@/services/secret-services.ts'
+import LinkContainer from '@/components/inputs-helpers/LinkContainer.vue'
+import Help from '@/components/inputs-helpers/Help.vue'
 
 const link = ref(null)
 const error = ref(null)

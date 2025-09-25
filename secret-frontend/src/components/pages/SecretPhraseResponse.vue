@@ -1,9 +1,9 @@
 <script setup>
 import MainButton from '@/components/buttons/MainButton.vue'
-import router from '@/router/index.js'
+import router from '@/router/index.ts'
 import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
-import SecretServices from '@/services/secret-services.js'
+import SecretServices from '@/services/secret-services.ts'
 
 const route = useRoute()
 const loading = ref(false)

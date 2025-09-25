@@ -10,6 +10,9 @@
 
 <style scoped>
 .background {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
   background: #d6cccc;
@@ -19,12 +22,8 @@
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  min-width: 800px;
-  min-height: 500px;
-  width: 65vw;
-  height: 50vh;
-  margin: 0 auto;
-  transform: translateY(50%);
+  width: 90vw;
+  height: 70vh;
   background: #ebebeb;
   border-radius: 30px;
   box-shadow: 5px 5px 10px rgba(121, 121, 121, 0.63);
