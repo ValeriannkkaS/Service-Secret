@@ -19,6 +19,7 @@
   background: #d6cccc;
 }
 .form-secret-phrase-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-around;

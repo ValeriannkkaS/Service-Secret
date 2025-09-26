@@ -1,20 +1,29 @@
 <template>
-  <h1>Секретная фраза:</h1>
-  <div class="secret-phrase-container">
-    <div v-if="loading" class="loading">
-      <p>Загрузка...</p>
-    </div>
-    <div v-if="error" class="error">
-      <p>
-        Срок действия секретной фразы истек, либо ссылка недействительна или исчерпала все свои
-        просмотры
-      </p>
-    </div>
-    <div v-if="secretPhrase">
-      <p>{{ secretPhrase }}</p>
+  <div class="help-options-container">
+    <p>Оставшийся срок жизни пароля: дней - 3, просмотров - 1</p>
+    <div class="options-buttons-container">
+      <MainButton class="orange option-btn">Удалить</MainButton>
+      <MainButton class="violet option-btn">Передать еще</MainButton>
     </div>
   </div>
-  <MainButton :on-click="returnBack" class="large">Вернуться на главную</MainButton>
+  <div class="response-container">
+    <p>Ваш пароль:</p>
+    <div class="secret-phrase-container">
+      <div v-if="loading" class="loading">
+        <p>Загрузка...</p>
+      </div>
+      <div v-if="error" class="error">
+        <p>
+          Срок действия пароля истек, либо ссылка недействительна или исчерпала все свои просмотры
+        </p>
+      </div>
+      <div v-if="secretPhrase">
+        <p>{{ secretPhrase }}</p>
+      </div>
+    </div>
+    <MainButton :on-click="returnBack" class="show-copy-btn orange">Показать пароль</MainButton>
+    <!--todo динамическая смена цвета и текста внутри кнопки + функционал копирования пароля-->
+  </div>
 </template>
 
 <script setup>
@@ -53,20 +62,49 @@ function returnBack() {
 </script>
 
 <style scoped>
+.help-options-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  padding: 10px 50px;
+  background: #a3b0c6;
+  border-radius: 30px 30px 0 0;
+  width: 100%;
+}
+.response-container {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 17px;
+  width: 100%;
+}
 .secret-phrase-container {
-  width: 80%;
-  min-width: 700px;
-  min-height: 100px;
+  width: 100%;
+  height: 62px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: #dddddd;
-  border-radius: 30px;
+  justify-content: start;
+  padding: 0 16px;
+  background: rgba(215, 191, 243, 0.7);
+  border: solid 2px #9d4df3;
+  border-radius: 0.7rem;
   box-shadow:
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .error {
   color: red;
+}
+.option-btn {
+  padding: 0 16px;
+  font-size: 13px;
+  border-radius: 6px;
+  margin-left: 16px;
+}
+.show-copy-btn {
+  width: 100%;
+  height: 60px;
 }
 </style>

@@ -9,12 +9,12 @@
         placeholder="Введите передаваемый пароль"
       />
       <!--todo langs -->
-      <MainButton class="submit-btn" type="submit">Передать!</MainButton>
+      <MainButton class="submit-btn violet" type="submit">Передать!</MainButton>
     </div>
     <div class="divider"></div>
     <div class="right-form-part">
       <div class="right-form-part-options-container">
-        <MainButton class="generate-btn" :on-click="generateSecret" type="button"
+        <MainButton class="generate-btn violet" :on-click="generateSecret" type="button"
           >Сгенерировать</MainButton
         >
         <Select class="select" v-model="countOfSymbols" :options="optionsCountOfSymbols"></Select>

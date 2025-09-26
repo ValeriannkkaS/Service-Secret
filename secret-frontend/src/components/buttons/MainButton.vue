@@ -12,7 +12,6 @@ defineProps<{
 
 <style scoped>
 .main-button {
-  background: #9d4df3;
   font-family: 'M PLUS Rounded 1c', sans-serif;
   font-weight: 900;
   color: #fff;
@@ -24,6 +23,12 @@ defineProps<{
   &:hover {
     background: #9647ef;
     box-shadow: 5px 5px 10px rgba(78, 78, 78, 0.75);
+  }
+  &.violet {
+    background: #9d4df3;
+  }
+  &.orange {
+    background: #c63400;
   }
 }
 </style>
