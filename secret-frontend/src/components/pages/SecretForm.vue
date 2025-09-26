@@ -25,6 +25,10 @@
         <Select class="select" v-model="expiresIn" :options="optionsExpiresIn"></Select>
         <Select class="select" v-model="countOfViews" :options="optionsCountOfViews"></Select>
       </div>
+      <div class="right-form-part-options-container">
+        <input type="checkbox" id="checkbox" class="checkbox" />
+        <label for="checkbox">Пользователи могут удалять пароль</label>
+      </div>
     </div>
   </form>
   <LinkContainer v-if="link" :link="link">ссылка</LinkContainer>
@@ -94,9 +98,9 @@ async function generateSecret() {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center; /*todo посмотреть, как будет лучше*/
+  justify-content: start; /*todo посмотреть, как будет лучше*/
   align-items: center; /*todo посмотреть, как будет лучше*/
-  gap: 2rem;
+  gap: 1.5rem;
 }
 .right-form-part-options-container {
   width: 90%;
@@ -105,15 +109,6 @@ async function generateSecret() {
 }
 
 /*элементы формы*/
-.generate-btn,
-.select {
-  width: 50%;
-  height: 35px;
-}
-.submit-btn,
-.input {
-  width: 90%;
-}
 .submit-btn {
   height: 60px;
 }
@@ -127,6 +122,20 @@ async function generateSecret() {
   &:hover {
     border: 1px solid rgba(171, 104, 234, 0.56);
   }
+}
+.generate-btn,
+.select {
+  width: 50%;
+  height: 35px;
+}
+.submit-btn,
+.input {
+  width: 90%;
+}
+.checkbox {
+  accent-color: #9647ef;
+  width: 22px;
+  aspect-ratio: 1/1;
 }
 .divider {
   width: 3px;
