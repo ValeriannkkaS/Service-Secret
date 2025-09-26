@@ -9,8 +9,7 @@ const props = defineProps<{
 </script>
 
 <style scoped>
-p {
-  position: absolute;
+p.error {
   color: red;
 }
 </style>

@@ -1,7 +1,6 @@
 <template>
   <form class="form-container" @submit.prevent="setSecretPhrase">
     <div class="left-form-part">
-      <Help v-if="errorText" :error="errorText"></Help>
       <input
         class="input"
         v-model="secretPhrase"
@@ -9,7 +8,10 @@
         placeholder="Введите передаваемый пароль"
       />
       <!--todo langs -->
-      <MainButton class="submit-btn violet" type="submit">Передать!</MainButton>
+      <MainButton class="submit-btn violet" type="submit" :disabled="!secretPhrase"
+        >Передать!</MainButton
+      >
+      <Help class="error" v-if="error" :error="error"></Help>
     </div>
     <div class="divider"></div>
     <div class="right-form-part">
@@ -42,46 +44,37 @@ import {
   optionsCountOfViews,
   optionsExpiresIn,
 } from '@/constants&interfaces/optionsForSelect.ts'
-import { ref, computed } from 'vue'
-import SecretServices from '@/services/secret-services.ts'
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 import LinkContainer from '@/components/inputs-helpers/LinkContainer.vue'
 import Help from '@/components/inputs-helpers/Help.vue'
 
-const link = ref(null)
-const error = ref(null)
-const secretPhrase = ref('')
-const countOfViews = ref(1)
-const countOfSymbols = ref(8)
-const expiresIn = ref(86400000)
+const store = useStore()
 
-const errorText = computed(() => (secretPhrase.value ? null : error.value))
+const secretPhrase = computed({
+  get: () => store.state.secretForm.secretPhrase,
+  set: (value) => store.commit('secretForm/setSecretPhrase', value),
+})
+const countOfSymbols = computed({
+  get: () => store.state.secretForm.countOfSymbols,
+  set: (value) => store.commit('secretForm/setCountOfSymbols', value),
+})
+const countOfViews = computed({
+  get: () => store.state.secretForm.countOfViews,
+  set: (value) => store.commit('secretForm/setCountOfViews', value),
+})
+const expiresIn = computed({
+  get: () => store.state.secretForm.expiresIn,
+  set: (value) => store.commit('secretForm/setExpiresIn', value),
+})
+const error = computed(() => store.state.secretForm.error)
+const link = computed(() => store.state.link)
 
-// todo store vuex
-async function setSecretPhrase() {
-  if (!secretPhrase.value) {
-    error.value = 'Введите или сгенерируйте секретную фразу'
-    return
-  }
-  try {
-    const secretDto = {
-      secretPhrase: secretPhrase.value,
-      expiresInTimestamp: expiresIn.value,
-      availableViews: countOfViews.value,
-    }
-    const response = await SecretServices.createSecret(secretDto)
-    link.value = response.data.link
-  } catch (e) {
-    error.value = 'Что-то пошло не так, попробуйте позднее'
-  }
+const setSecretPhrase = async () => {
+  store.dispatch('secretForm/setSecretPhrase')
 }
-
-async function generateSecret() {
-  try {
-    const response = await SecretServices.generateSecretPhrase(countOfSymbols.value)
-    secretPhrase.value = response
-  } catch (error) {
-    error.value = 'Ошибка генерирования секретной фразы'
-  }
+const generateSecret = async () => {
+  store.dispatch('secretForm/generateSecretPhrase')
 }
 </script>
 

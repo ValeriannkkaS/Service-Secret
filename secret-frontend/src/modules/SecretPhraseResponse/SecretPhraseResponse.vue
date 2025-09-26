@@ -3,7 +3,7 @@
     <p class="help">Оставшийся срок жизни пароля: дней - 3, просмотров - 1</p>
     <div class="options-buttons-container">
       <MainButton class="orange option-btn">Удалить</MainButton>
-      <MainButton class="violet option-btn">Передать еще</MainButton>
+      <MainButton :on-click="returnBack" class="violet option-btn">Передать еще</MainButton>
     </div>
   </div>
   <div class="response-container">
@@ -21,7 +21,7 @@
         <p>{{ secretPhrase }}</p>
       </div>
     </div>
-    <MainButton :on-click="returnBack" class="show-copy-btn orange">Показать пароль</MainButton>
+    <MainButton class="show-copy-btn orange">Показать пароль</MainButton>
     <!--todo динамическая смена цвета и текста внутри кнопки + функционал копирования пароля-->
   </div>
 </template>
@@ -56,9 +56,7 @@ async function getSecretPhrase() {
   }
 }
 
-function returnBack() {
-  router.push('/')
-}
+const returnBack = () => router.push('/')
 </script>
 
 <style scoped>

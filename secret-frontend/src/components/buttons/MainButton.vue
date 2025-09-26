@@ -11,8 +11,13 @@ defineProps<{
 </script>
 
 <style scoped>
+.main-button[disabled] {
+  cursor: not-allowed;
+  background-color: #5a5560 !important;
+}
 .main-button {
   font-family: 'M PLUS Rounded 1c', sans-serif;
+  cursor: pointer;
   font-weight: 900;
   color: #fff;
   font-size: 1.3rem;

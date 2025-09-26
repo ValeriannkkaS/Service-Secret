@@ -26,7 +26,7 @@ const fullLink = computed(() => `http://${domain}/${props.link}`)
   min-width: 800px;
   height: 100px;
   position: absolute;
-  bottom: 2rem;
+  bottom: -10rem;
   background: #ebebeb;
   border-radius: 30px;
   box-shadow: 5px 5px 10px rgba(121, 121, 121, 0.63);
