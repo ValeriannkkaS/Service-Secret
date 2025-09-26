@@ -1,3 +1,9 @@
+<template>
+  <div class="link-container">
+    <span>Ваша ссылка для передачи: </span><a :href="fullLink">{{ fullLink }}</a>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 
@@ -8,12 +14,6 @@ const domain = window.location.host
 
 const fullLink = computed(() => `http://${domain}/${props.link}`)
 </script>
-
-<template>
-  <div class="link-container">
-    <span>Ваша ссылка для передачи: </span><a :href="fullLink">{{ fullLink }}</a>
-  </div>
-</template>
 
 <style scoped>
 .link-container {

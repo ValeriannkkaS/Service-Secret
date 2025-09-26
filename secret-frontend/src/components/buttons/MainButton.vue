@@ -1,14 +1,14 @@
-<script setup lang="ts">
-defineProps<{
-  onClick?: () => void
-}>()
-</script>
-
 <template>
   <button @click="onClick" class="main-button">
     <slot></slot>
   </button>
 </template>
+
+<script setup lang="ts">
+defineProps<{
+  onClick?: () => void
+}>()
+</script>
 
 <style scoped>
 .main-button {

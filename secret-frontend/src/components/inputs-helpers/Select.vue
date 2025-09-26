@@ -1,3 +1,11 @@
+<template>
+  <select v-model="model">
+    <option v-for="option in options" :value="option.value" :key="option.id">
+      {{ option.text }}
+    </option>
+  </select>
+</template>
+
 <script setup lang="ts">
 import type { optionForSelect } from '@/constants&interfaces/interfaces'
 
@@ -7,14 +15,6 @@ defineProps<{
   options: optionForSelect[]
 }>()
 </script>
-
-<template>
-  <select v-model="model">
-    <option v-for="option in options" :value="option.value" :key="option.id">
-      {{ option.text }}
-    </option>
-  </select>
-</template>
 
 <style scoped>
 select {

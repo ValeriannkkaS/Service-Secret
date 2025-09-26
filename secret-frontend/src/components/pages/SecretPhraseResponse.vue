@@ -1,3 +1,22 @@
+<template>
+  <h1>Секретная фраза:</h1>
+  <div class="secret-phrase-container">
+    <div v-if="loading" class="loading">
+      <p>Загрузка...</p>
+    </div>
+    <div v-if="error" class="error">
+      <p>
+        Срок действия секретной фразы истек, либо ссылка недействительна или исчерпала все свои
+        просмотры
+      </p>
+    </div>
+    <div v-if="secretPhrase">
+      <p>{{ secretPhrase }}</p>
+    </div>
+  </div>
+  <MainButton :on-click="returnBack" class="large">Вернуться на главную</MainButton>
+</template>
+
 <script setup>
 import MainButton from '@/components/buttons/MainButton.vue'
 import router from '@/router/index.ts'
@@ -32,25 +51,6 @@ function returnBack() {
   router.push('/')
 }
 </script>
-
-<template>
-  <h1>Секретная фраза:</h1>
-  <div class="secret-phrase-container">
-    <div v-if="loading" class="loading">
-      <p>Загрузка...</p>
-    </div>
-    <div v-if="error" class="error">
-      <p>
-        Срок действия секретной фразы истек, либо ссылка недействительна или исчерпала все свои
-        просмотры
-      </p>
-    </div>
-    <div v-if="secretPhrase">
-      <p>{{ secretPhrase }}</p>
-    </div>
-  </div>
-  <MainButton :on-click="returnBack" class="large">Вернуться на главную</MainButton>
-</template>
 
 <style scoped>
 .secret-phrase-container {

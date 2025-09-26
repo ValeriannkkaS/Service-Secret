@@ -1,5 +1,3 @@
-<script setup lang="ts"></script>
-
 <!--// todo https://help.areal.company/services/development_web/notes/frontend-develop.html изучи-->
 <template>
   <div class="background">
@@ -8,6 +6,8 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts"></script>
 
 <style scoped>
 .background {
