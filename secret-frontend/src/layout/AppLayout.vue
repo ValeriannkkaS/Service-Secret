@@ -22,7 +22,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   padding: 50px 50px 35px;
   width: 1000px;

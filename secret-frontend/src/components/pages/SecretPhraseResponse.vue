@@ -1,6 +1,6 @@
 <template>
   <div class="help-options-container">
-    <p>Оставшийся срок жизни пароля: дней - 3, просмотров - 1</p>
+    <p class="help">Оставшийся срок жизни пароля: дней - 3, просмотров - 1</p>
     <div class="options-buttons-container">
       <MainButton class="orange option-btn">Удалить</MainButton>
       <MainButton class="violet option-btn">Передать еще</MainButton>
@@ -80,11 +80,19 @@ function returnBack() {
   gap: 17px;
   width: 100%;
 }
+.options-buttons-container {
+  display: flex;
+  gap: 17px;
+}
+.secret-phrase-container p {
+  white-space: nowrap;
+}
 .secret-phrase-container {
   width: 100%;
   height: 62px;
   display: flex;
   align-items: center;
+  overflow-x: auto;
   justify-content: start;
   padding: 0 16px;
   background: rgba(215, 191, 243, 0.7);
@@ -101,10 +109,30 @@ function returnBack() {
   padding: 0 16px;
   font-size: 13px;
   border-radius: 6px;
-  margin-left: 16px;
 }
 .show-copy-btn {
   width: 100%;
   height: 60px;
+}
+@media (max-width: 1001px) {
+  .help-options-container {
+    flex-direction: column;
+    align-items: start;
+
+    justify-content: center;
+    gap: 16px;
+    border-radius: 0;
+    position: static;
+    top: 0;
+  }
+  .secret-phrase-container {
+    overflow: auto;
+  }
+  .response-container {
+    padding: 30px;
+  }
+  .help {
+    width: 250px;
+  }
 }
 </style>
