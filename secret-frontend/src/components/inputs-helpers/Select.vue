@@ -18,8 +18,6 @@ defineProps<{
 
 <style scoped>
 select {
-  width: 230px;
-  height: 40px;
   border-radius: 0.7rem;
   transition: 0.3s all;
 }

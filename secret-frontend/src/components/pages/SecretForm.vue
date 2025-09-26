@@ -1,3 +1,35 @@
+<template>
+  <form class="form-container" @submit.prevent="setSecretPhrase">
+    <div class="left-form-part">
+      <Help v-if="errorText" :error="errorText"></Help>
+      <input
+        class="input"
+        v-model="secretPhrase"
+        type="text"
+        placeholder="Введите передаваемый пароль"
+      />
+      <!--todo langs -->
+      <MainButton class="submit-btn" type="submit">Передать!</MainButton>
+    </div>
+    <div class="divider"></div>
+    <div class="right-form-part">
+      <div class="right-form-part-options-container">
+        <MainButton class="generate-btn" :on-click="generateSecret" type="button"
+          >Сгенерировать</MainButton
+        >
+        <Select class="select" v-model="countOfSymbols" :options="optionsCountOfSymbols"></Select>
+      </div>
+      <!--todo langs i18n-->
+      <p>Удалить пароль и сслыку спустя (что наступит раньше):</p>
+      <div class="right-form-part-options-container">
+        <Select class="select" v-model="expiresIn" :options="optionsExpiresIn"></Select>
+        <Select class="select" v-model="countOfViews" :options="optionsCountOfViews"></Select>
+      </div>
+    </div>
+  </form>
+  <LinkContainer v-if="link" :link="link">ссылка</LinkContainer>
+</template>
+
 <script setup>
 import MainButton from '@/components/buttons/MainButton.vue'
 import Select from '@/components/inputs-helpers/Select.vue'
@@ -20,6 +52,7 @@ const expiresIn = ref(86400000)
 
 const errorText = computed(() => (secretPhrase.value ? null : error.value))
 
+// todo store vuex
 async function setSecretPhrase() {
   if (!secretPhrase.value) {
     error.value = 'Введите или сгенерируйте секретную фразу'
@@ -48,30 +81,6 @@ async function generateSecret() {
 }
 </script>
 
-<template>
-  <form class="form-container" @submit.prevent="setSecretPhrase">
-    <div class="left-form-part">
-      <Help v-if="errorText" :error="errorText"></Help>
-      <input v-model="secretPhrase" type="text" />
-      <div></div>
-      <MainButton class="medium" type="submit">Передать!</MainButton>
-    </div>
-    <div class="divider"></div>
-    <div class="right-form-part">
-      <div class="right-form-part-options-container">
-        <MainButton :on-click="generateSecret" type="button">Сгенерировать</MainButton>
-        <Select v-model="countOfSymbols" :options="optionsCountOfSymbols"></Select>
-      </div>
-      <p>Удалить пароль и сслыку спустя (что наступит раньше):</p>
-      <div class="right-form-part-options-container">
-        <Select v-model="expiresIn" :options="optionsExpiresIn"></Select>
-        <Select v-model="countOfViews" :options="optionsCountOfViews"></Select>
-      </div>
-    </div>
-  </form>
-  <LinkContainer v-if="link" :link="link">ссылка</LinkContainer>
-</template>
-
 <style scoped>
 .form-container {
   width: 100%;
@@ -79,35 +88,50 @@ async function generateSecret() {
   display: flex;
   align-items: center;
 }
-.divider {
-  width: 3px;
-  border-radius: 1px;
-  height: 95%;
-  background-color: rgba(173, 173, 173, 0.56);
-}
 .left-form-part,
 .right-form-part {
   height: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: center; /*todo посмотреть, как будет лучше*/
+  align-items: center; /*todo посмотреть, как будет лучше*/
   gap: 2rem;
-  align-items: center;
 }
 .right-form-part-options-container {
+  width: 90%;
   display: flex;
-  gap: 100px;
+  gap: 1rem;
 }
-input {
-  padding: 3px;
-  width: 300px;
-  height: 50px;
+
+/*элементы формы*/
+.generate-btn,
+.select {
+  width: 50%;
+  height: 35px;
+}
+.submit-btn,
+.input {
+  width: 90%;
+}
+.submit-btn {
+  height: 60px;
+}
+.input {
+  padding: 0 16px;
+  width: 90%;
+  height: 62px;
   font-size: 20px;
   border-radius: 0.7rem;
   border: 1px solid rgba(173, 173, 173, 0.56);
   &:hover {
     border: 1px solid rgba(171, 104, 234, 0.56);
   }
+}
+.divider {
+  width: 3px;
+  border-radius: 1px;
+  height: 95%;
+  background-color: rgba(173, 173, 173, 0.56);
 }
 </style>

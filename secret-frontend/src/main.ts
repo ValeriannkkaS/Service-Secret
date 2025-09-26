@@ -6,4 +6,6 @@ const app = createApp(App)
 
 app.use(router)
 
+// todo снести лишнее пакеты и папки и файлы
+// todo axios -> fetch
 app.mount('#app')

@@ -12,6 +12,7 @@ const secretPhrase = ref(null)
 
 watch(() => route.params.link, getSecretPhrase, { immediate: true })
 
+// todo стрелочные функции
 async function getSecretPhrase() {
   error.value = secretPhrase.value = null
   loading.value = true

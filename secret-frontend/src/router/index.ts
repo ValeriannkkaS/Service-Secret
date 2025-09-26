@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import SecretForm from '@/components/pages/SecretForm.vue'
-import SecretPhraseResponse from '@/components/pages/SecretPhraseResponse.vue'
+import SecretPhraseResponse from '../components/pages/SecretPhraseResponse.vue'
 
 const routes = [
   { path: '/', component: SecretForm },

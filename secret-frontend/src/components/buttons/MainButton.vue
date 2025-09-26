@@ -25,15 +25,5 @@ defineProps<{
     background: #9647ef;
     box-shadow: 5px 5px 10px rgba(78, 78, 78, 0.75);
   }
-  width: 230px;
-  height: 40px;
-  &.medium {
-    width: 300px;
-    height: 50px;
-  }
-  &.large {
-    width: 450px;
-    height: 50px;
-  }
 }
 </style>
