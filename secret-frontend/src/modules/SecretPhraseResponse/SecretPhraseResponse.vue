@@ -28,7 +28,7 @@
 
 <script setup>
 import MainButton from '@/components/buttons/MainButton.vue'
-import router from '@/router/index.ts'
+import router from '@/router/index.js'
 import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
 import SecretServices from '@/services/secret-services.ts'
