@@ -35,5 +35,10 @@ defineProps<{
   &.orange {
     background: #c63400;
   }
+  &.option-btn {
+    padding: 0 16px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
 }
 </style>

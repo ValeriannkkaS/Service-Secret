@@ -44,7 +44,7 @@ import {
   optionsCountOfViews,
   optionsExpiresIn,
 } from '@/constants&interfaces/optionsForSelect.ts'
-import { computed } from 'vue'
+import { computed, provide } from 'vue'
 import { useStore } from 'vuex'
 import LinkContainer from '@/components/inputs-helpers/LinkContainer.vue'
 import Help from '@/components/inputs-helpers/Help.vue'
