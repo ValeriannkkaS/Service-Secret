@@ -4,6 +4,7 @@ export default {
       secretPhrase: state.secretPhrase,
       expiresInTimestamp: state.expiresIn,
       availableViews: state.countOfViews,
+      allowDeletions: state.allowDeletions,
     }
   },
 }

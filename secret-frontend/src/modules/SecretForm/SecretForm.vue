@@ -28,7 +28,7 @@
         <Select class="select" v-model="countOfViews" :options="optionsCountOfViews"></Select>
       </div>
       <div class="right-form-part-options-container">
-        <input type="checkbox" id="checkbox" class="checkbox" />
+        <input type="checkbox" id="checkbox" class="checkbox" v-model="allowDeletions" />
         <label for="checkbox">Пользователи могут удалять пароль</label>
       </div>
     </div>
@@ -48,6 +48,7 @@ import { computed } from 'vue'
 import { useStore } from 'vuex'
 import LinkContainer from '@/components/inputs-helpers/LinkContainer.vue'
 import Help from '@/components/inputs-helpers/Help.vue'
+import router from '@/router/index.js'
 
 const store = useStore()
 
@@ -67,11 +68,16 @@ const expiresIn = computed({
   get: () => store.state.secretForm.expiresIn,
   set: (value) => store.commit('secretForm/setExpiresIn', value),
 })
+const allowDeletions = computed({
+  get: () => store.state.secretForm.allowDeletions,
+  set: (value) => store.commit('secretForm/setAllowDeletions', value),
+})
 const error = computed(() => store.state.secretForm.error)
 const link = computed(() => store.state.link)
 
 const setSecretPhrase = async () => {
-  store.dispatch('secretForm/setSecretPhrase')
+  await store.dispatch('secretForm/setSecretPhrase')
+  router.push(`/show/${link.value}`)
 }
 const generateSecret = async () => {
   store.dispatch('secretForm/generateSecretPhrase')

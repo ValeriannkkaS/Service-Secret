@@ -14,4 +14,8 @@ export default {
   setCountOfViews(state, countOfViews) {
     state.countOfViews = countOfViews
   },
+  setAllowDeletions(state, allowDeletions) {
+    state.allowDeletions = allowDeletions
+    console.log(state.allowDeletions)
+  },
 }
