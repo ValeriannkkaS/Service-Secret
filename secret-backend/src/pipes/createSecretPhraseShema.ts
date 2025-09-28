@@ -6,4 +6,6 @@ export const createSecretPhraseShema = Joi.object({
   expiresInTimestamp: Joi.number().integer().default(86400000),
 
   availableViews: Joi.number().integer().min(1).max(10).required(),
+
+  allowDeletions: Joi.boolean().default(false),
 }).required();

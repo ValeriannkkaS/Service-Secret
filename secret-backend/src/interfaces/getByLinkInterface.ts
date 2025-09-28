@@ -5,4 +5,5 @@ export interface GetByLinkInterface {
   link: string;
   expires_at: Date | null;
   remaining_views_count: number;
+  allow_deletions: boolean;
 }

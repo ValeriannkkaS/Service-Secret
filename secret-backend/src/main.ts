@@ -8,6 +8,8 @@ dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
+// todo dotenv убрать
+// todo убрать не нужные тебе пакеты
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(helmet());

@@ -1,3 +1,4 @@
+// todo убрать
 import {
   ConflictException,
   HttpException,
@@ -14,6 +15,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { PgService } from '../pg/pg.service';
 
+// todo jsdoc
 @Injectable()
 export class CryptoService {
   constructor(
@@ -21,28 +23,8 @@ export class CryptoService {
     private configService: ConfigService,
   ) {}
 
-  async generateUniqueLink() {
-    const link = randomUUID().toString();
-    try {
-      const result = await this.pgService.findOne(
-        'secret_table',
-        '*',
-        'link',
-        link,
-      );
-
-      if (result) {
-        throw new HttpException(
-          'failed to generate unique link',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
-      return link;
-    } catch (error) {
-      throw error;
-    }
-  }
-
+  // todo interface
+  // todo jsdoc + interface
   async generateSecret(length: number) {
     return randomBytes(length).toString('hex').slice(0, length);
   }
@@ -52,6 +34,7 @@ export class CryptoService {
       const iv = randomBytes(16);
       const ivBase64 = iv.toString('base64');
 
+      // todo or delete
       const keyBase64 = this.configService.get<string>('CRYPTO_KEY') || 'ss';
       const key = Buffer.from(keyBase64, 'base64');
 

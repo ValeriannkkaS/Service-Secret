@@ -15,6 +15,7 @@ import { CreateSecretPhrasePipe } from '../pipes/create-secret-phrase.pipe';
 import { CryptoService } from '../crypto/crypto.service';
 import { createSecretPhraseShema } from '../pipes/createSecretPhraseShema';
 
+// todo swagger описать
 @Controller('/secret')
 export class SecretController {
   constructor(

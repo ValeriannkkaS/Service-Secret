@@ -5,6 +5,7 @@ import { CONNECTION } from '../constants/constansts';
 export class PgService {
   constructor(@Inject(CONNECTION) private connection) {}
 
+  // todo как везде поправить
   async findOneAndDelete(table: string, where: unknown, what: unknown) {
     const client = await this.connection.connect();
     try {

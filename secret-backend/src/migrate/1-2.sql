@@ -1,3 +1,4 @@
+-- // todo src папка миграции. Попробовать генерацию миграции пакетом
 CREATE TABLE secret_table (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     encrypted_value TEXT NOT NULL,

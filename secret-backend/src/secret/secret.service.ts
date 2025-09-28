@@ -12,32 +12,38 @@ export class SecretService {
     @Inject(PgService) private pgService: PgService,
   ) {}
 
+  // todo jsdoc
   async setSecretPhrase(secretDto: CreateSecretDto) {
-    const { secretPhrase, availableViews, expiresInTimestamp } = secretDto;
+    const { secretPhrase, availableViews, expiresInTimestamp, allowDeletions } =
+      secretDto;
 
     const { encryptedTextBase64, ivBase64 } =
       await this.cryptoService.encryptSecretPhrase(secretPhrase);
 
-    const link = await this.cryptoService.generateUniqueLink();
-    if (!link) {
-    }
     const expiresAt = new Date(Date.now() + expiresInTimestamp);
 
     const insertValues = {
       encrypted_value: encryptedTextBase64,
       iv: ivBase64,
-      link: link,
       expires_at: expiresAt,
       remaining_views_count: availableViews,
+      allow_deletions: allowDeletions,
     };
-    return await this.pgService.insert('secret_table', insertValues, 'link');
+    const info = await this.pgService.insert('secret_table', insertValues, '*');
+    console.log(info);
+    return {
+      link: info.id,
+      expiresAt: info.expires_at,
+      remainingViewsCount: info.remaining_views_count,
+      allowDeletions: info.allow_deletions,
+    };
   }
 
   async getSecretPhraseByLink(link: string) {
     const info: GetByLinkInterface = await this.pgService.findOne(
       'secret_table',
       '*',
-      'link',
+      'id',
       link,
     );
 
@@ -47,11 +53,13 @@ export class SecretService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    // todo const
     let {
       iv,
       remaining_views_count: remainingViewsCount,
       encrypted_value: encryptedValue,
       expires_at: expiresIn,
+      allow_deletions: allowDeletions,
     } = info;
 
     if (remainingViewsCount <= 0 || !expiresIn || expiresIn < new Date()) {
@@ -67,20 +75,25 @@ export class SecretService {
       encryptedValue,
       iv,
     );
+    // todo сделать новую переменную
     remainingViewsCount--;
 
     if (remainingViewsCount <= 0) {
-      await this.pgService.findOneAndDelete('secret_table', 'link', link);
+      // todo delete
+      await this.pgService.findOneAndDelete('secret_table', 'id', link);
     }
 
+    // todo update
     await this.pgService.findOneAndUpdate(
       'secret_table',
       'remaining_views_count',
       remainingViewsCount,
-      'link',
+      'id',
       link,
     );
 
-    return encryptedPhrase;
+    return {
+      encryptedPhrase: encryptedPhrase,
+    };
   }
 }
