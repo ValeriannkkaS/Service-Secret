@@ -6,6 +6,7 @@ import getters from './getters'
 import state from './state'
 import secretForm from '@/store/modules/SecretForm/index.js'
 import secretPhraseResponse from '@/store/modules/SecretPhraseResponse/index.js'
+import createPersistedState from 'vuex-persistedstate'
 
 const store = createStore({
   state,
@@ -16,6 +17,7 @@ const store = createStore({
     secretForm,
     secretPhraseResponse,
   },
+  plugins: [createPersistedState()],
 })
 
 export default store
