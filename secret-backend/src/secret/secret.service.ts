@@ -60,10 +60,11 @@ export class SecretService {
       encrypted_value: encryptedValue,
       expires_at: expiresIn,
       allow_deletions: allowDeletions,
+      id,
     } = info;
 
     if (remainingViewsCount <= 0 || !expiresIn || expiresIn < new Date()) {
-      await this.pgService.findOneAndDelete('secret_table', 'link', link);
+      await this.pgService.findOneAndDelete('secret_table', 'id', link);
 
       throw new HttpException(
         'the number of requests or the available time for requests has been exhausted',
@@ -71,7 +72,7 @@ export class SecretService {
       );
     }
 
-    const encryptedPhrase = await this.cryptoService.decryptSecretPhrase(
+    const decryptedPhrase = await this.cryptoService.decryptSecretPhrase(
       encryptedValue,
       iv,
     );
@@ -93,7 +94,35 @@ export class SecretService {
     );
 
     return {
-      encryptedPhrase: encryptedPhrase,
+      decryptedPhrase: decryptedPhrase,
+      link: id,
+      remainingViewsCount: remainingViewsCount,
+      expiresAt: expiresIn,
+      allowDeletions: allowDeletions,
     };
+  }
+
+  async deleteSecretPhrase(link: string) {
+    const info: GetByLinkInterface = await this.pgService.findOne(
+      'secret_table',
+      '*',
+      'id',
+      link,
+    );
+
+    if (!info) {
+      throw new HttpException(
+        'failed to delete secret phrase (secret phrase already destroyed or link is invalid)',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (!info.allow_deletions) {
+      throw new HttpException(
+        'failed to delete secret phrase (secret is not allowed to deletions)',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return await this.pgService.findOneAndDelete('secret_table', 'id', link);
   }
 }

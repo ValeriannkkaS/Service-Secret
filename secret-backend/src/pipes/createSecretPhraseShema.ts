@@ -1,7 +1,7 @@
 import Joi from 'joi';
 
 export const createSecretPhraseShema = Joi.object({
-  secretPhrase: Joi.string().min(3).max(25).required(),
+  secretPhrase: Joi.string().required(),
 
   expiresInTimestamp: Joi.number().integer().default(86400000),
 

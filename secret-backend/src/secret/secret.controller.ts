@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
+  Delete,
 } from '@nestjs/common';
 import { CreateSecretDto } from './dto/create-secret.dto';
 import { SecretService } from './secret.service';
@@ -42,5 +43,11 @@ export class SecretController {
   @HttpCode(HttpStatus.OK)
   generateSecretPhrase(@Param('length', new ParseIntPipe()) length: number) {
     return this.cryptoService.generateSecret(length);
+  }
+
+  @Delete('/:link')
+  @HttpCode(HttpStatus.OK)
+  deleteSecretPhrase(@Param('link', new ParseUUIDPipe()) link: string) {
+    return this.secretService.deleteSecretPhrase(link);
   }
 }
