@@ -64,7 +64,6 @@ const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.li
 const show = computed(() => store.state.secretPhraseResponse.show)
 const passwordInfo = computed(() => store.state.passwordInfo?.[route.params.link])
 
-// todo стрелочные функции
 const getSecretPhrase = async () =>
   store.dispatch('secretPhraseResponse/getSecretPhraseByLink', route.params.link)
 

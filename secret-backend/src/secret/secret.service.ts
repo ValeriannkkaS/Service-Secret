@@ -80,11 +80,9 @@ export class SecretService {
     remainingViewsCount--;
 
     if (remainingViewsCount <= 0) {
-      // todo delete
       await this.pgService.delete('secret_table', 'id', link);
     }
 
-    // todo update
     await this.pgService.update(
       'secret_table',
       'remaining_views_count',

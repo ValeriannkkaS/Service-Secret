@@ -98,8 +98,8 @@ const generateSecret = async () => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: start; /*todo посмотреть, как будет лучше*/
-  align-items: center; /*todo посмотреть, как будет лучше*/
+  justify-content: start;
+  align-items: center;
   gap: 1.5rem;
 }
 .right-form-part-options-container {
