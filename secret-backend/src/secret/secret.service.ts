@@ -53,8 +53,7 @@ export class SecretService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    // todo const
-    let {
+    const {
       iv,
       remaining_views_count: remainingViewsCount,
       encrypted_value: encryptedValue,
@@ -76,17 +75,18 @@ export class SecretService {
       encryptedValue,
       iv,
     );
-    // todo сделать новую переменную
-    remainingViewsCount--;
 
-    if (remainingViewsCount <= 0) {
+    let remainingViewsCount2 = remainingViewsCount;
+    remainingViewsCount2--;
+
+    if (remainingViewsCount2 <= 0) {
       await this.pgService.delete('secret_table', 'id', link);
     }
 
     await this.pgService.update(
       'secret_table',
       'remaining_views_count',
-      remainingViewsCount,
+      remainingViewsCount2,
       'id',
       link,
     );
@@ -94,7 +94,7 @@ export class SecretService {
     return {
       decryptedPhrase: decryptedPhrase,
       link: id,
-      remainingViewsCount: remainingViewsCount,
+      remainingViewsCount: remainingViewsCount2,
       expiresAt: expiresIn,
       allowDeletions: allowDeletions,
     };
