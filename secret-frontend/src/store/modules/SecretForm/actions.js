@@ -1,7 +1,7 @@
 import SecretServices from '@/services/secret-services.js'
 
 export default {
-  async setSecretPhrase({ state, commit, rootState, getters }) {
+  async setSecretPhrase({ commit, getters }) {
     try {
       const response = await SecretServices.createSecret(getters.secretDto)
       commit('setLink', response.data.link, { root: true })
@@ -22,6 +22,16 @@ export default {
       commit('setError', 'что-то пошло не так')
       setTimeout(() => commit('setError', null), 3000)
       //todo сделать кастомный вывод ошибки и loading
+    }
+  },
+  async deleteSecretPhrase({ commit, getters }, link) {
+    try {
+      const response = await SecretServices.deleteSecretPhrase(link)
+      commit('setLink', null, { root: true })
+      commit('deletePasswordInfo', response.id, { root: true })
+    } catch (err) {
+      commit('setError', 'что-то пошло не так') // todo поправить -> сейчас эта ошибка летит в форму
+      setTimeout(() => commit('setError', null), 3000)
     }
   },
   async generateSecretPhrase({ state, commit }) {

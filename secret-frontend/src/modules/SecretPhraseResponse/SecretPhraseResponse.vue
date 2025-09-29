@@ -1,11 +1,13 @@
 <template>
   <HelpOptionsContainer>
-    <MainButton v-if="allowDeletions" class="orange option-btn">Удалить</MainButton>
+    <MainButton v-if="allowDeletions" class="orange option-btn" :on-click="deleteSecretPhrase"
+      >Удалить</MainButton
+    >
     <MainButton :on-click="returnBack" class="violet option-btn">Передать еще</MainButton>
   </HelpOptionsContainer>
   <div class="response-container">
-    <p>Ваш пароль:</p>
-    <div class="secret-phrase-container">
+    <p v-if="passwordInfo">Ваш пароль:</p>
+    <div class="secret-phrase-container" v-if="passwordInfo">
       <div v-if="loading" class="loading">
         <p>Загрузка...</p>
       </div>
@@ -21,14 +23,24 @@
         <p>{{ unseenSecretPhrase }}</p>
       </div>
     </div>
-    <MainButton v-if="!show && secretPhrase" class="show-copy-btn orange" :on-click="showPassword"
+    <MainButton
+      v-if="!show && secretPhrase && passwordInfo"
+      class="show-copy-btn orange"
+      :on-click="showPassword"
       >Показать пароль</MainButton
     >
-    <MainButton v-if="show && secretPhrase" class="show-copy-btn violet" :on-click="copyPassword"
+    <MainButton
+      v-if="show && secretPhrase && passwordInfo"
+      class="show-copy-btn violet"
+      :on-click="copyPassword"
       >Скопировать</MainButton
     >
+    <div v-if="!passwordInfo" class="secret-phrase-container">
+      <p>Попробуйте передать еще раз</p>
+    </div>
   </div>
-  <Modal :copied="copied">Пароль был скопирован в буфер обмена</Modal>
+  <Modal :copied="copied" :deleted="''">Пароль был скопирован в буфер обмена</Modal>
+  <Modal :deleted="deleted" :copied="''">Пароль был удален</Modal>
 </template>
 
 <script setup>
@@ -43,12 +55,14 @@ import Modal from '@/components/inputs-helpers/Modal.vue'
 const route = useRoute()
 const store = useStore()
 const copied = ref('')
+const deleted = ref('')
 const loading = computed(() => store.state.secretPhraseResponse.loading)
 const error = computed(() => store.state.secretPhraseResponse.error)
 const secretPhrase = computed(() => store.state.secretPhraseResponse.secretPhrase)
 const unseenSecretPhrase = computed(() => '*'.repeat(secretPhrase.value.length))
 const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.link]?.allowDeletions)
 const show = computed(() => store.state.secretPhraseResponse.show)
+const passwordInfo = computed(() => store.state.passwordInfo?.[route.params.link])
 
 // todo стрелочные функции
 const getSecretPhrase = async () =>
@@ -61,6 +75,13 @@ const copyPassword = () => {
   copied.value = 'active'
   setTimeout(() => {
     copied.value = ''
+  }, 1000)
+}
+const deleteSecretPhrase = () => {
+  store.dispatch('secretForm/deleteSecretPhrase', route.params.link)
+  deleted.value = 'deleted'
+  setTimeout(() => {
+    deleted.value = ''
   }, 1000)
 }
 

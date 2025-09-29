@@ -22,6 +22,15 @@ export default class SecretServices {
     }
   }
 
+  static async deleteSecretPhrase(link: string) {
+    try {
+      const response = await $api.delete(`/${link}`)
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  }
+
   static async generateSecretPhrase(length: number) {
     try {
       const response = await $api.get(`/generate/${length}`)

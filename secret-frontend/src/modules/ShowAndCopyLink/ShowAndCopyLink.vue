@@ -1,6 +1,8 @@
 <template>
   <HelpOptionsContainer>
-    <MainButton v-if="allowDeletions" class="orange option-btn">Удалить</MainButton>
+    <MainButton v-if="allowDeletions" class="orange option-btn" :on-click="deleteSecretPhrase"
+      >Удалить</MainButton
+    >
     <MainButton class="violet option-btn" :on-click="returnBack">Передать еще</MainButton>
   </HelpOptionsContainer>
   <div v-if="passwordInfo" class="main-container">
@@ -19,7 +21,8 @@
       </div>
     </div>
   </div>
-  <Modal :copied="copied">Ссылка была скопирована в буфер обмена</Modal>
+  <Modal :copied="copied" :deleted="''">Ссылка была скопирована в буфер обмена</Modal>
+  <Modal :copied="''" :deleted="deleted">Пароль был удален</Modal>
 </template>
 
 <script setup>
@@ -34,6 +37,7 @@ const route = useRoute()
 const router = useRouter()
 const store = useStore()
 const copied = ref('')
+const deleted = ref('')
 
 const link = route.params.link
 const passwordInfo = computed(() => store.state.passwordInfo?.[link] || null)
@@ -44,6 +48,13 @@ const fullLink = computed(() =>
   passwordInfo ? `http://${domain}/${passwordInfo?.value?.link}` : null,
 )
 
+const deleteSecretPhrase = () => {
+  store.dispatch('secretForm/deleteSecretPhrase', link)
+  deleted.value = 'deleted'
+  setTimeout(() => {
+    deleted.value = ''
+  }, 1000)
+}
 const copyLink = () => {
   navigator.clipboard.writeText(fullLink.value)
   copied.value = 'active'

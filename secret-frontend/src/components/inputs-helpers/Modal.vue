@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" :class="copied">
+  <div class="modal" :class="{ active: copied, deleted: deleted }">
     <p><slot></slot></p>
   </div>
 </template>
@@ -7,6 +7,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   copied: string
+  deleted: string
 }>()
 </script>
 
@@ -27,6 +28,11 @@ const props = defineProps<{
 }
 .modal.active {
   opacity: 1;
+}
+.modal.deleted {
+  opacity: 1;
+  background-color: rgba(232, 101, 56, 0.83);
+  border: 3px solid rgb(243, 73, 24);
 }
 @media (max-width: 1001px) {
   .modal {

@@ -5,4 +5,10 @@ export default {
   setPasswordInfo(state, { link, passwordInfo }) {
     state.passwordInfo = { ...state.passwordInfo, [link]: passwordInfo }
   },
+  deletePasswordInfo(state, link) {
+    const passwordInfo = { ...state.passwordInfo }
+    delete passwordInfo[link]
+    state.passwordInfo = {}
+    console.log(state.passwordInfo)
+  },
 }
