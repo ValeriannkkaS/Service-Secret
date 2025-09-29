@@ -11,6 +11,7 @@ services:
     depends_on:
       - postgres
 
+#// todo локально не нужен
   secret-frontend:
     container_name: secret-frontend
     build:
@@ -23,6 +24,7 @@ services:
     env_file:
       - ./secret-frontend/.env.production
 
+# todo 17 pg
   postgres:
     image: postgres:15
     container_name: secret-postgres-db-prod
@@ -31,6 +33,7 @@ services:
       - 6543:5432
     volumes:
       - secret_service_postgres_data:/var/lib/postgresql/data
+#    todo env
     environment:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: 1234567890

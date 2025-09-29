@@ -5,8 +5,7 @@ import { CONNECTION } from '../constants/constansts';
 export class PgService {
   constructor(@Inject(CONNECTION) private connection) {}
 
-  // todo как везде поправить
-  async findOneAndDelete(table: string, where: unknown, what: unknown) {
+  async delete(table: string, where: unknown, what: unknown) {
     const client = await this.connection.connect();
     try {
       const queryText = `DELETE FROM ${table} WHERE ${where} = $1 RETURNING ${where}`;
@@ -23,7 +22,7 @@ export class PgService {
     }
   }
 
-  async findOneAndUpdate(
+  async update(
     table: string,
     field: string,
     newValue: any,
@@ -61,12 +60,7 @@ export class PgService {
     }
   }
 
-  async findOne(
-    table: string,
-    field: string = '*',
-    where: string,
-    what: unknown,
-  ) {
+  async find(table: string, field: string = '*', where: string, what: unknown) {
     const client = await this.connection.connect();
     try {
       const queryText = `SELECT ${field} FROM ${table} WHERE ${where} = $1`;

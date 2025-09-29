@@ -40,7 +40,7 @@ export class SecretService {
   }
 
   async getSecretPhraseByLink(link: string) {
-    const info: GetByLinkInterface = await this.pgService.findOne(
+    const info: GetByLinkInterface = await this.pgService.find(
       'secret_table',
       '*',
       'id',
@@ -64,7 +64,7 @@ export class SecretService {
     } = info;
 
     if (remainingViewsCount <= 0 || !expiresIn || expiresIn < new Date()) {
-      await this.pgService.findOneAndDelete('secret_table', 'id', link);
+      await this.pgService.delete('secret_table', 'id', link);
 
       throw new HttpException(
         'the number of requests or the available time for requests has been exhausted',
@@ -81,11 +81,11 @@ export class SecretService {
 
     if (remainingViewsCount <= 0) {
       // todo delete
-      await this.pgService.findOneAndDelete('secret_table', 'id', link);
+      await this.pgService.delete('secret_table', 'id', link);
     }
 
     // todo update
-    await this.pgService.findOneAndUpdate(
+    await this.pgService.update(
       'secret_table',
       'remaining_views_count',
       remainingViewsCount,
@@ -103,7 +103,7 @@ export class SecretService {
   }
 
   async deleteSecretPhrase(link: string) {
-    const info: GetByLinkInterface = await this.pgService.findOne(
+    const info: GetByLinkInterface = await this.pgService.find(
       'secret_table',
       '*',
       'id',
@@ -123,6 +123,6 @@ export class SecretService {
       );
     }
 
-    return await this.pgService.findOneAndDelete('secret_table', 'id', link);
+    return await this.pgService.delete('secret_table', 'id', link);
   }
 }

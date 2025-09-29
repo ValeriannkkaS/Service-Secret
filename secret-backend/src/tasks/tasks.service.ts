@@ -16,7 +16,7 @@ export class TasksService {
     );
     const deletedEntries: ResponseInterface[] = [];
     for (let i = 0; i < ids.length; i++) {
-      const deletedEntrie = await this.pgService.findOneAndDelete(
+      const deletedEntrie = await this.pgService.delete(
         'secret_table',
         'id',
         ids[i].id,
