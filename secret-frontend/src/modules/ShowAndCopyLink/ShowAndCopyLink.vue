@@ -19,9 +19,7 @@
       </div>
     </div>
   </div>
-  <div class="modal" :class="copied">
-    <p>Ссылка была скопирована в буфер обмена</p>
-  </div>
+  <Modal :copied="copied">Ссылка была скопирована в буфер обмена</Modal>
 </template>
 
 <script setup>
@@ -30,6 +28,7 @@ import MainButton from '@/components/buttons/MainButton.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { computed, ref } from 'vue'
+import Modal from '@/components/inputs-helpers/Modal.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -96,23 +95,6 @@ const returnBack = () => router.push('/')
 .note {
   margin-bottom: 16px;
 }
-.modal {
-  font-size: 25px;
-  position: absolute;
-  top: 0;
-  transform: translateY(-200%);
-  background-color: rgba(157, 80, 244, 0.84);
-  width: 100%;
-  border-radius: 20px;
-  padding: 15px;
-  color: white;
-  border: 3px solid rgb(125, 27, 239);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-.modal.active {
-  opacity: 1;
-}
 @media (max-width: 1001px) {
   .show-copy-link-container {
     flex-direction: column;
@@ -120,13 +102,6 @@ const returnBack = () => router.push('/')
   }
   .main-container {
     padding: 24px;
-  }
-  .modal {
-    position: absolute;
-    top: 0;
-    font-size: 16px;
-    transform: translateY(100%);
-    width: 90%;
   }
 }
 </style>

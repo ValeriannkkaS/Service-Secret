@@ -28,10 +28,7 @@
       >Скопировать</MainButton
     >
   </div>
-  <div class="modal" :class="copied">
-    <p>Пароль был скопирован в буфер обмена</p>
-  </div>
-  <!--  todo можно вынести в компонент-->
+  <Modal :copied="copied">Пароль был скопирован в буфер обмена</Modal>
 </template>
 
 <script setup>
@@ -41,6 +38,7 @@ import { useRoute } from 'vue-router'
 import { computed, ref, watch } from 'vue'
 import HelpOptionsContainer from '@/components/inputs-helpers/HelpOptionsContainer.vue'
 import { useStore } from 'vuex'
+import Modal from '@/components/inputs-helpers/Modal.vue'
 
 const route = useRoute()
 const store = useStore()
@@ -102,36 +100,12 @@ watch(() => route.params.link, getSecretPhrase, { immediate: true })
   width: 100%;
   height: 60px;
 }
-.modal {
-  font-size: 25px;
-  position: absolute;
-  top: 0;
-  transform: translateY(-200%);
-  background-color: rgba(157, 80, 244, 0.84);
-  width: 100%;
-  border-radius: 20px;
-  padding: 15px;
-  color: white;
-  border: 3px solid rgb(125, 27, 239);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-.modal.active {
-  opacity: 1;
-}
 @media (max-width: 1001px) {
   .secret-phrase-container {
     overflow: auto;
   }
   .response-container {
     padding: 30px;
-  }
-  .modal {
-    position: absolute;
-    top: 0;
-    font-size: 16px;
-    transform: translateY(100%);
-    width: 90%;
   }
 }
 </style>
