@@ -33,7 +33,6 @@
       </div>
     </div>
   </form>
-  <LinkContainer v-if="link" :link="link">ссылка</LinkContainer>
 </template>
 
 <script setup>
@@ -44,9 +43,8 @@ import {
   optionsCountOfViews,
   optionsExpiresIn,
 } from '@/constants&interfaces/optionsForSelect.ts'
-import { computed, provide } from 'vue'
+import { computed } from 'vue'
 import { useStore } from 'vuex'
-import LinkContainer from '@/components/inputs-helpers/LinkContainer.vue'
 import Help from '@/components/inputs-helpers/Help.vue'
 import router from '@/router/index.js'
 
