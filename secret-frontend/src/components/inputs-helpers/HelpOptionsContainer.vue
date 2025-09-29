@@ -22,10 +22,10 @@ const route = useRoute()
 const store = useStore()
 
 const link = route.params.link
-const passwordInfo = computed(() => store.state.passwordInfo[link])
-const expiresAt = computed(() => passwordInfo.value.expiresAt)
-const date = computed(() => new Date(expiresAt.value).toLocaleDateString())
-const lastView = computed(() => passwordInfo.value.remainingViewsCount === 0)
+const passwordInfo = computed(() => store.state?.passwordInfo?.[link])
+const expiresAt = computed(() => passwordInfo?.value?.expiresAt)
+const date = computed(() => new Date(expiresAt?.value).toLocaleDateString())
+const lastView = computed(() => passwordInfo?.value?.remainingViewsCount === 0)
 </script>
 
 <style scoped>

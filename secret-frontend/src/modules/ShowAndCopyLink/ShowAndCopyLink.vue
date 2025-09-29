@@ -1,6 +1,6 @@
 <template>
-  <HelpOptionsContainer v-if="passwordInfo">
-    <MainButton class="orange option-btn">Удалить</MainButton>
+  <HelpOptionsContainer>
+    <MainButton v-if="allowDeletions" class="orange option-btn">Удалить</MainButton>
     <MainButton class="violet option-btn" :on-click="returnBack">Передать еще</MainButton>
   </HelpOptionsContainer>
   <div v-if="passwordInfo" class="main-container">
@@ -12,13 +12,20 @@
       <MainButton :on-click="copyLink" class="violet copy-btn">Скопировать</MainButton>
     </div>
   </div>
+  <div v-if="!passwordInfo" class="main-container">
+    <div class="show-copy-link-container">
+      <div class="link-container">
+        <p class="link">Попробуйте передать еще раз</p>
+      </div>
+    </div>
+  </div>
   <div class="modal" :class="copied">
     <p>Ссылка была скопирована в буфер обмена</p>
   </div>
 </template>
 
 <script setup>
-import HelpOptionsContainer from '@/modules/helpOptionsContainer/HelpOptionsContainer.vue'
+import HelpOptionsContainer from '@/components/inputs-helpers/HelpOptionsContainer.vue'
 import MainButton from '@/components/buttons/MainButton.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
@@ -30,10 +37,13 @@ const store = useStore()
 const copied = ref('')
 
 const link = route.params.link
-const passwordInfo = computed(() => store.state.passwordInfo[link])
+const passwordInfo = computed(() => store.state.passwordInfo?.[link] || null)
+const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.link]?.allowDeletions)
 
 const domain = window.location.host
-const fullLink = computed(() => `http://${domain}/${passwordInfo.value.link}`)
+const fullLink = computed(() =>
+  passwordInfo ? `http://${domain}/${passwordInfo?.value?.link}` : null,
+)
 
 const copyLink = () => {
   navigator.clipboard.writeText(fullLink.value)

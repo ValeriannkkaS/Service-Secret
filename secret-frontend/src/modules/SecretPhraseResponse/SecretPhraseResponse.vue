@@ -1,6 +1,6 @@
 <template>
   <HelpOptionsContainer>
-    <MainButton class="orange option-btn">Удалить</MainButton>
+    <MainButton v-if="allowDeletions" class="orange option-btn">Удалить</MainButton>
     <MainButton :on-click="returnBack" class="violet option-btn">Передать еще</MainButton>
   </HelpOptionsContainer>
   <div class="response-container">
@@ -29,7 +29,7 @@
     >
   </div>
   <div class="modal" :class="copied">
-    <p>Пароль был скопирована в буфер обмена</p>
+    <p>Пароль был скопирован в буфер обмена</p>
   </div>
   <!--  todo можно вынести в компонент-->
 </template>
@@ -39,7 +39,7 @@ import MainButton from '@/components/buttons/MainButton.vue'
 import router from '@/router/index.js'
 import { useRoute } from 'vue-router'
 import { computed, ref, watch } from 'vue'
-import HelpOptionsContainer from '@/modules/helpOptionsContainer/HelpOptionsContainer.vue'
+import HelpOptionsContainer from '@/components/inputs-helpers/HelpOptionsContainer.vue'
 import { useStore } from 'vuex'
 
 const route = useRoute()
@@ -49,6 +49,7 @@ const loading = computed(() => store.state.secretPhraseResponse.loading)
 const error = computed(() => store.state.secretPhraseResponse.error)
 const secretPhrase = computed(() => store.state.secretPhraseResponse.secretPhrase)
 const unseenSecretPhrase = computed(() => '*'.repeat(secretPhrase.value.length))
+const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.link]?.allowDeletions)
 const show = computed(() => store.state.secretPhraseResponse.show)
 
 // todo стрелочные функции
@@ -63,9 +64,7 @@ const copyPassword = () => {
   setTimeout(() => {
     copied.value = ''
   }, 1000)
-  console.log(show)
 }
-console.log(show)
 
 watch(() => route.params.link, getSecretPhrase, { immediate: true })
 </script>
