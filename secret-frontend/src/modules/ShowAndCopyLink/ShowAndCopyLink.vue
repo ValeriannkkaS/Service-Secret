@@ -1,7 +1,7 @@
 <template>
   <HelpOptionsContainer v-if="passwordInfo">
     <MainButton class="orange option-btn">Удалить</MainButton>
-    <MainButton class="violet option-btn">Передать еще</MainButton>
+    <MainButton class="violet option-btn" :on-click="returnBack">Передать еще</MainButton>
   </HelpOptionsContainer>
   <div v-if="passwordInfo" class="main-container">
     <p class="note">Пароль доступен по ссылке:</p>
@@ -20,11 +20,12 @@
 <script setup>
 import HelpOptionsContainer from '@/modules/helpOptionsContainer/HelpOptionsContainer.vue'
 import MainButton from '@/components/buttons/MainButton.vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { computed, ref } from 'vue'
 
 const route = useRoute()
+const router = useRouter()
 const store = useStore()
 const copied = ref('')
 
@@ -41,6 +42,7 @@ const copyLink = () => {
     copied.value = ''
   }, 1000)
 }
+const returnBack = () => router.push('/')
 </script>
 
 <style scoped>
@@ -108,6 +110,13 @@ const copyLink = () => {
   }
   .main-container {
     padding: 24px;
+  }
+  .modal {
+    position: absolute;
+    top: 0;
+    font-size: 16px;
+    transform: translateY(100%);
+    width: 90%;
   }
 }
 </style>

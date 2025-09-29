@@ -21,7 +21,7 @@ export default {
     } catch (err) {
       commit('setError', 'что-то пошло не так')
       setTimeout(() => commit('setError', null), 3000)
-      //todo сделать кастомный вывод ошибки
+      //todo сделать кастомный вывод ошибки и loading
     }
   },
   async generateSecretPhrase({ state, commit }) {

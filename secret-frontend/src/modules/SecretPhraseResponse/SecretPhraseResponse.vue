@@ -14,47 +14,60 @@
           Срок действия пароля истек, либо ссылка недействительна или исчерпала все свои просмотры
         </p>
       </div>
-      <div v-if="secretPhrase">
+      <div v-if="secretPhrase && show">
         <p>{{ secretPhrase }}</p>
       </div>
+      <div v-if="secretPhrase && !show">
+        <p>{{ unseenSecretPhrase }}</p>
+      </div>
     </div>
-    <MainButton class="show-copy-btn orange">Показать пароль</MainButton>
-    <!--todo динамическая смена цвета и текста внутри кнопки + функционал копирования пароля-->
+    <MainButton v-if="!show && secretPhrase" class="show-copy-btn orange" :on-click="showPassword"
+      >Показать пароль</MainButton
+    >
+    <MainButton v-if="show && secretPhrase" class="show-copy-btn violet" :on-click="copyPassword"
+      >Скопировать</MainButton
+    >
   </div>
+  <div class="modal" :class="copied">
+    <p>Пароль был скопирована в буфер обмена</p>
+  </div>
+  <!--  todo можно вынести в компонент-->
 </template>
 
 <script setup>
 import MainButton from '@/components/buttons/MainButton.vue'
 import router from '@/router/index.js'
 import { useRoute } from 'vue-router'
-import { ref, watch } from 'vue'
-import SecretServices from '@/services/secret-services.ts'
+import { computed, ref, watch } from 'vue'
 import HelpOptionsContainer from '@/modules/helpOptionsContainer/HelpOptionsContainer.vue'
+import { useStore } from 'vuex'
 
 const route = useRoute()
-const loading = ref(false)
-const error = ref(null)
-const secretPhrase = ref(null)
-
-watch(() => route.params.link, getSecretPhrase, { immediate: true })
+const store = useStore()
+const copied = ref('')
+const loading = computed(() => store.state.secretPhraseResponse.loading)
+const error = computed(() => store.state.secretPhraseResponse.error)
+const secretPhrase = computed(() => store.state.secretPhraseResponse.secretPhrase)
+const unseenSecretPhrase = computed(() => '*'.repeat(secretPhrase.value.length))
+const show = computed(() => store.state.secretPhraseResponse.show)
 
 // todo стрелочные функции
-async function getSecretPhrase() {
-  error.value = secretPhrase.value = null
-  loading.value = true
-
-  try {
-    const response = await SecretServices.getSecretPhrase(route.params.link)
-    console.log(response)
-    secretPhrase.value = response
-  } catch (err) {
-    error.value = true
-  } finally {
-    loading.value = false
-  }
-}
+const getSecretPhrase = async () =>
+  store.dispatch('secretPhraseResponse/getSecretPhraseByLink', route.params.link)
 
 const returnBack = () => router.push('/')
+const showPassword = () => store.commit('secretPhraseResponse/setShow', true)
+const copyPassword = () => {
+  navigator.clipboard.writeText(secretPhrase.value)
+  copied.value = 'active'
+  setTimeout(() => {
+    copied.value = ''
+  }, 1000)
+  console.log(show)
+}
+console.log(show)
+
+watch(() => route.params.link, getSecretPhrase, { immediate: true })
 </script>
 
 <style scoped>
@@ -90,12 +103,36 @@ const returnBack = () => router.push('/')
   width: 100%;
   height: 60px;
 }
+.modal {
+  font-size: 25px;
+  position: absolute;
+  top: 0;
+  transform: translateY(-200%);
+  background-color: rgba(157, 80, 244, 0.84);
+  width: 100%;
+  border-radius: 20px;
+  padding: 15px;
+  color: white;
+  border: 3px solid rgb(125, 27, 239);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.modal.active {
+  opacity: 1;
+}
 @media (max-width: 1001px) {
   .secret-phrase-container {
     overflow: auto;
   }
   .response-container {
     padding: 30px;
+  }
+  .modal {
+    position: absolute;
+    top: 0;
+    font-size: 16px;
+    transform: translateY(100%);
+    width: 90%;
   }
 }
 </style>
