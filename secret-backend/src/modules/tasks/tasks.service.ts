@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { PgService } from '../pg/pg.service';
-import { ResponseInterface } from '../interfaces/responseInterfaces';
+import { ResponseInterface } from '../../interfaces/responseInterfaces';
 
 @Injectable()
 export class TasksService {

@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { Pool } from 'pg';
-import { CONNECTION } from '../constants/constansts';
+import { CONNECTION } from '../../constants/constansts';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PgService } from './pg.service';
 

@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateSecretDto } from './dto/create-secret.dto';
-import { CONNECTION } from '../constants/constansts';
+import { CONNECTION } from '../../constants/constansts';
 import { CryptoService } from '../crypto/crypto.service';
-import { GetByLinkInterface } from '../interfaces/getByLinkInterface';
+import { GetByLinkInterface } from '../../interfaces/getByLinkInterface';
 import { PgService } from '../pg/pg.service';
 
 @Injectable()

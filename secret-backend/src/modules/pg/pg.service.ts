@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { CONNECTION } from '../constants/constansts';
+import { CONNECTION } from '../../constants/constansts';
 
 @Injectable()
 export class PgService {

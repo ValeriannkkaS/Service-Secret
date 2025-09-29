@@ -12,9 +12,9 @@ import {
 } from '@nestjs/common';
 import { CreateSecretDto } from './dto/create-secret.dto';
 import { SecretService } from './secret.service';
-import { CreateSecretPhrasePipe } from '../pipes/create-secret-phrase.pipe';
+import { CreateSecretPhrasePipe } from '../../pipes/create-secret-phrase.pipe';
 import { CryptoService } from '../crypto/crypto.service';
-import { createSecretPhraseShema } from '../pipes/createSecretPhraseShema';
+import { createSecretPhraseShema } from '../../pipes/createSecretPhraseShema';
 
 // todo swagger описать
 @Controller('/secret')
