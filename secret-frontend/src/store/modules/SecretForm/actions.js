@@ -37,7 +37,7 @@ export default {
   async generateSecretPhrase({ state, commit }) {
     try {
       const response = await SecretServices.generateSecretPhrase(state.countOfSymbols)
-      commit('setSecretPhrase', response)
+      commit('setSecretPhrase', response.secretPhrase)
     } catch (err) {
       commit('setError', 'ошибка генерации пароля')
     }
