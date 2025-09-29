@@ -41,4 +41,9 @@ defineProps<{
     border-radius: 6px;
   }
 }
+.main-button:active {
+  transition: 0.05s;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 5px rgba(78, 78, 78, 0.75);
+}
 </style>

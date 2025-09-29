@@ -13,6 +13,7 @@ export default {
             allowDeletions: response.data.allowDeletions,
             expiresAt: response.data.expiresAt,
             remainingViewsCount: response.data.remainingViewsCount,
+            link: response.data.link,
           },
         },
         { root: true },
