@@ -1,17 +1,5 @@
-// todo убрать
-import {
-  ConflictException,
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
-import {
-  randomUUID,
-  createCipheriv,
-  createDecipheriv,
-  randomBytes,
-} from 'crypto';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { PgService } from '../pg/pg.service';
 
@@ -26,7 +14,9 @@ export class CryptoService {
   // todo interface
   // todo jsdoc + interface
   async generateSecret(length: number) {
-    return randomBytes(length).toString('hex').slice(0, length);
+    return {
+      secretPhrase: randomBytes(length).toString('hex').slice(0, length),
+    };
   }
 
   async encryptSecretPhrase(phrase: string) {
@@ -34,7 +24,6 @@ export class CryptoService {
       const iv = randomBytes(16);
       const ivBase64 = iv.toString('base64');
 
-      // todo or delete
       const keyBase64 = this.configService.get<string>('CRYPTO_KEY') || 'ss';
       const key = Buffer.from(keyBase64, 'base64');
 
