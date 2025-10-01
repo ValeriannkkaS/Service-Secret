@@ -11,7 +11,7 @@ import { PgService } from './pg.service';
     {
       provide: CONNECTION,
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: async (configService: ConfigService): Promise<Pool> => {
         const pool = new Pool({
           user: configService.get<string>('POSTGRES_USER'),
           host: configService.get<string>('POSTGRES_HOST'),

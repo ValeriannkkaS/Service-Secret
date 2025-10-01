@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class BadRequestResponse {
+export class BadRequestResponseDto {
   @ApiProperty({
     example: '"availableViews" must be a number',
   })

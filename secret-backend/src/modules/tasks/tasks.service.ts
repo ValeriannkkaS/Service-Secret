@@ -10,16 +10,15 @@ export class TasksService {
   @Cron('0 */5 * * * *')
   async handleCron(): Promise<void> {
     console.log('Cron running tasks');
-    const ids: IdResponse[] = await this.pgService.findExpiredEntries(
-      'secret_table',
-      'id',
-    );
+    const ids: IdResponse[] =
+      await this.pgService.findExpiredEntries<IdResponse>('secret_table', 'id');
     const deletedEntries: IdResponse[] = [];
     for (let i = 0; i < ids.length; i++) {
-      const deletedEntrie = await this.pgService.delete(
+      const deletedEntrie = await this.pgService.delete<{ id: string }>(
         'secret_table',
         'id',
         ids[i].id,
+        'id',
       );
       deletedEntries.push(deletedEntrie);
     }

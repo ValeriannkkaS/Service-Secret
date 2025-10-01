@@ -5,6 +5,7 @@ import { PgService } from '../pg/pg.service';
 import { CreateSecretResponse } from './interfaces/response-create-secret.interface';
 import { GetSecretResponse } from './interfaces/response-get-secret.interface';
 import { IdResponse } from './interfaces/id-response.interface';
+import { SecretEntry } from '../pg/interfaces/secret-entry.interface';
 
 @Injectable()
 export class SecretService {
@@ -32,19 +33,28 @@ export class SecretService {
       remaining_views_count: availableViews,
       allow_deletions: allowDeletions,
     };
-    const info = await this.pgService.insert('secret_table', insertValues, '*');
+    const info = await this.pgService.insert<SecretEntry>(
+      'secret_table',
+      insertValues,
+      '*',
+    );
     console.log(info);
     //todo убрать все console.log()
     return {
       link: info.id,
-      expiresAt: info.expires_at,
+      expiresAt: info.expires_at.toISOString(),
       remainingViewsCount: info.remaining_views_count,
       allowDeletions: info.allow_deletions,
     };
   }
 
   async getSecretPhraseByLink(link: string): Promise<GetSecretResponse> {
-    const info = await this.pgService.find('secret_table', '*', 'id', link);
+    const info = await this.pgService.find<SecretEntry>(
+      'secret_table',
+      '*',
+      'id',
+      link,
+    );
 
     if (!info) {
       throw new HttpException(
@@ -62,7 +72,12 @@ export class SecretService {
     } = info;
 
     if (remainingViewsCount <= 0 || !expiresIn || expiresIn < new Date()) {
-      await this.pgService.delete('secret_table', 'id', link);
+      await this.pgService.delete<{ id: string }>(
+        'secret_table',
+        'id',
+        link,
+        'id',
+      );
 
       throw new HttpException(
         'the number of requests or the available time for requests has been exhausted',
@@ -79,7 +94,12 @@ export class SecretService {
     remainingViewsCount2--;
 
     if (remainingViewsCount2 <= 0) {
-      await this.pgService.delete('secret_table', 'id', link);
+      await this.pgService.delete<{ id: string }>(
+        'secret_table',
+        'id',
+        link,
+        'id',
+      );
     }
 
     await this.pgService.update(
@@ -94,13 +114,18 @@ export class SecretService {
       decryptedPhrase: decryptedPhrase,
       link: id,
       remainingViewsCount: remainingViewsCount2,
-      expiresAt: expiresIn,
+      expiresAt: expiresIn.toISOString(),
       allowDeletions: allowDeletions,
     };
   }
 
   async deleteSecretPhrase(link: string): Promise<IdResponse> {
-    const info = await this.pgService.find('secret_table', '*', 'id', link);
+    const info = await this.pgService.find<SecretEntry>(
+      'secret_table',
+      '*',
+      'id',
+      link,
+    );
 
     if (!info) {
       throw new HttpException(
@@ -115,6 +140,11 @@ export class SecretService {
       );
     }
 
-    return await this.pgService.delete('secret_table', 'id', link);
+    return await this.pgService.delete<{ id: string }>(
+      'secret_table',
+      'id',
+      link,
+      'id',
+    );
   }
 }
