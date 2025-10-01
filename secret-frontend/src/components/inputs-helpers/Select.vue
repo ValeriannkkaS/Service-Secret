@@ -1,15 +1,19 @@
 <template>
   <select v-model="model">
     <option v-for="option in options" :value="option.value" :key="option.id">
-      {{ option.text }}
+      {{ option.text[x] }}
     </option>
   </select>
 </template>
 
 <script setup lang="ts">
 import type { optionForSelect } from '@/constants&interfaces/interfaces'
+import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
 
 const model = defineModel()
+const { locale } = useI18n()
+const x = computed(() => locale.value)
 
 defineProps<{
   options: optionForSelect[]

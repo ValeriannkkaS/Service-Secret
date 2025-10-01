@@ -1,12 +1,13 @@
 <template>
   <div class="help-options-container1">
     <p v-if="passwordInfo && !lastView" class="help">
-      Ваш пароль истечет {{ date }} или через {{ passwordInfo.remainingViewsCount }} просмотр(ов)
+      {{ t('options.passwordExpired') }} {{ date }} {{ t('options.orAfter') }}
+      {{ passwordInfo.remainingViewsCount }} {{ t('options.views') }}
     </p>
     <p v-if="lastView" class="error">
-      Это последний просмотр этого пароля, после него он будет удален
+      {{ t('options.lastView') }}
     </p>
-    <p v-if="!passwordInfo" class="error">Нет пароля по такой ссылке, попробуйте передать еще</p>
+    <p v-if="!passwordInfo" class="error">{{ t('options.nonePassword') }}</p>
     <div class="options-buttons-container1">
       <slot></slot>
     </div>
@@ -17,9 +18,11 @@
 import { useStore } from 'vuex'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
 const store = useStore()
+const { t } = useI18n()
 
 const link = route.params.link
 const passwordInfo = computed(() => store.state?.passwordInfo?.[link])

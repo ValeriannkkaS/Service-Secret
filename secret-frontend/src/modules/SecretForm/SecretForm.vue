@@ -5,31 +5,31 @@
         class="input"
         v-model="secretPhrase"
         type="text"
-        placeholder="Введите передаваемый пароль"
+        :placeholder="t('formNote.placeholder')"
       />
       <!--todo langs -->
-      <MainButton class="submit-btn violet" type="submit" :disabled="!secretPhrase"
-        >Передать!</MainButton
-      >
+      <MainButton class="submit-btn violet" type="submit" :disabled="!secretPhrase">{{
+        t('buttons.pass')
+      }}</MainButton>
       <Help class="error" v-if="error" :error="error"></Help>
     </div>
     <div class="divider"></div>
     <div class="right-form-part">
       <div class="right-form-part-options-container">
-        <MainButton class="generate-btn violet" :on-click="generateSecret" type="button"
-          >Сгенерировать</MainButton
-        >
+        <MainButton class="generate-btn violet" :on-click="generateSecret" type="button">{{
+          t('buttons.generate')
+        }}</MainButton>
         <Select class="select" v-model="countOfSymbols" :options="optionsCountOfSymbols"></Select>
       </div>
       <!--todo langs i18n-->
-      <p>Удалить пароль и сслыку спустя (что наступит раньше):</p>
+      <p>{{ t('formNote.deleteAfter') }}</p>
       <div class="right-form-part-options-container">
         <Select class="select" v-model="expiresIn" :options="optionsExpiresIn"></Select>
         <Select class="select" v-model="countOfViews" :options="optionsCountOfViews"></Select>
       </div>
       <div class="right-form-part-options-container">
         <input type="checkbox" id="checkbox" class="checkbox" v-model="allowDeletions" />
-        <label for="checkbox">Пользователи могут удалять пароль</label>
+        <label for="checkbox">{{ t('formNote.allowDeletions') }}</label>
       </div>
     </div>
   </form>
@@ -50,6 +50,7 @@ import Help from '@/components/inputs-helpers/Help.vue'
 import router from '@/router/index.ts'
 
 const store = useStore()
+
 const { t } = useI18n()
 
 const secretPhrase = computed({

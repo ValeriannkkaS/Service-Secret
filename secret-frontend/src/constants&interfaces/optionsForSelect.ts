@@ -3,56 +3,65 @@ import type { optionForSelect } from '@/constants&interfaces/interfaces.ts'
 export const optionsCountOfSymbols: optionForSelect[] = [
   {
     id: 1,
-    text: '8 символов',
+    text: {
+      ru: '8 символов',
+      en: '8 symbols',
+    },
     value: 8,
   },
   {
     id: 2,
-    text: '12 символов',
+    text: {
+      ru: '12 символов',
+      en: '12 symbols',
+    },
     value: 12,
   },
   {
     id: 3,
-    text: '15 символов',
+    text: {
+      ru: '15 символов',
+      en: '15 symbols',
+    },
     value: 15,
   },
 ]
 export const optionsExpiresIn: optionForSelect[] = [
   {
     id: 1,
-    text: '1 день',
+    text: { ru: '1 день', en: '1 day' },
     value: 86400000,
   },
   {
     id: 2,
-    text: '3 дня',
+    text: { ru: '3 дня', en: '3 days' },
     value: 259200000,
   },
   {
     id: 3,
-    text: '5 дней',
+    text: { ru: '5 дней', en: '5 days' },
     value: 432000000,
   },
   {
     id: 4,
-    text: '10 дней',
+    text: { ru: '10 дней', en: '10 days' },
     value: 864000000,
   },
 ]
 export const optionsCountOfViews: optionForSelect[] = [
   {
     id: 1,
-    text: '1 просмотр',
+    text: { ru: '1 просмотр', en: '1 view' },
     value: 1,
   },
   {
     id: 2,
-    text: '3 просмотра',
+    text: { ru: '3 просмотра', en: '3 views' },
     value: 3,
   },
   {
     id: 3,
-    text: '5 просмотров',
+    text: { ru: '5 просмотров', en: '5 views' },
     value: 5,
   },
 ]

@@ -24,7 +24,7 @@
     </div>
   </div>
   <Modal :copied="copied" :deleted="''">{{ t('modal.linkCopied') }}</Modal>
-  <Modal :copied="''" :deleted="deleted">{{ t('password.passwordDeleted') }}</Modal>
+  <Modal :copied="''" :deleted="deleted">{{ t('modal.passwordDeleted') }}</Modal>
 </template>
 
 <script setup>

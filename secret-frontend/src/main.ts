@@ -4,6 +4,8 @@ import enShowAndCopyLink from './langs/ShowAndCopyLink/en/index'
 import ruShowAndCopyLink from './langs/ShowAndCopyLink/ru/index'
 import enSecretPhraseResponse from './langs/SecretPhraseResponse/en/index'
 import ruSecretPhraseResponse from './langs/SecretPhraseResponse/ru/index'
+import enSecretForm from './langs/SecretForm/en/index'
+import ruSecretForm from './langs/SecretForm/ru/index'
 import enApp from './langs/App/en'
 import ruApp from './langs/App/ru'
 import App from './App.vue'
@@ -16,11 +18,13 @@ const i18n = createI18n({
   messages: {
     en: {
       ...enApp,
+      ...enSecretForm,
       ...enShowAndCopyLink,
       ...enSecretPhraseResponse,
     },
     ru: {
       ...ruApp,
+      ...ruSecretForm,
       ...ruShowAndCopyLink,
       ...ruSecretPhraseResponse,
     },

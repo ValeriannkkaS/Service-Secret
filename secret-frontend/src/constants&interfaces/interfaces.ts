@@ -1,6 +1,9 @@
 export interface optionForSelect {
   id: number
-  text: string
+  text: {
+    en: string
+    ru: string
+  }
   value: number
 }
 export interface SecretDto {

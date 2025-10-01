@@ -4,6 +4,8 @@ export default {
     copy: 'Copy!',
     tryAgain: 'Try pass again',
     delete: 'Delete',
+    pass: 'Pass!',
+    generate: 'Generate',
   },
   modal: {
     linkCopied: 'The link has been copied on the clipboard.',
@@ -12,5 +14,12 @@ export default {
   },
   loading: {
     message: 'Loading...',
+  },
+  options: {
+    lastView: 'This is the last view of this passord. Password will be deleted after this view',
+    nonePassword: 'There is no password for this link, please, try pass again',
+    passwordExpired: 'Your password will expire on',
+    orAfter: 'or after',
+    views: 'view(s)',
   },
 }
