@@ -170,9 +170,10 @@ export class PgService {
       await client.query('COMMIT');
       return result.rows[0] as Returning;
     } catch (error) {
+      console.log(error);
       await client.query('ROLLBACK');
       throw new HttpException(
-        'failed to Update entry',
+        'failed to Insert entry',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } finally {

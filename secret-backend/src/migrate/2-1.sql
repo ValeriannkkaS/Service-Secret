@@ -1,1 +1,0 @@
-DROP TABLE "secret_table";
