@@ -7,6 +7,12 @@ import { IdResponse } from '../secret/interfaces/id-response.interface';
 export class TasksService {
   constructor(private readonly pgService: PgService) {}
 
+  /**
+   * Cron задача сервера, которая выполняется каждые 5 минут
+   * Функция находит истекшие записи секретных фраз в базе данных с помощью функции из другого модуля,
+   * а затем удаляет их все из базы данных с помощью функции из другого модуля,
+   * а затем выводит массив объектов с полем id удаленных записей в логи сервера
+   * */
   @Cron('0 */5 * * * *')
   async handleCron(): Promise<void> {
     console.log('Cron running tasks');
