@@ -46,7 +46,7 @@ import {
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 import Help from '@/components/inputs-helpers/Help.vue'
-import router from '@/router/index.js'
+import router from '@/router/index.ts'
 
 const store = useStore()
 
