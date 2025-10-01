@@ -16,9 +16,3 @@ export class BadRequestResponse {
   })
   statusCode: number;
 }
-
-export interface BadRequestResponseInterface {
-  message: string;
-  error?: string;
-  statusCode: number;
-}

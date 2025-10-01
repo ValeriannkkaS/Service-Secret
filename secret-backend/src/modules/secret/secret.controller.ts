@@ -13,18 +13,11 @@ import { SecretService } from './secret.service';
 import { CreateSecretPhrasePipe } from '../../pipes/create-secret-phrase.pipe';
 import { CryptoService } from '../crypto/crypto.service';
 import { createSecretPhraseShema } from '../../pipes/createSecretPhraseShema';
-import { BadRequestResponse } from '../../interfaces/BadRequestResponse';
-import type { BadRequestResponseInterface } from '../../interfaces/BadRequestResponse';
-import {
-  ApiBadRequestResponse,
-  ApiCreatedResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { ResponseCreateSecretDTO } from './dto/response-create-secret.dto';
 import { ControllerDecoratorAggregator } from '../../swagger.decorator';
 import templateStyleControllerConfig from './controller';
 
-// todo swagger описать
 @ApiTags('secret')
 @Controller('/secret')
 export class SecretController {
@@ -40,7 +33,7 @@ export class SecretController {
   setSecretPhrase(
     @Body(new CreateSecretPhrasePipe(createSecretPhraseShema))
     secretDto: CreateSecretDto,
-  ): Promise<ResponseCreateSecretDTO> | Promise<BadRequestResponseInterface> {
+  ) {
     return this.secretService.setSecretPhrase(secretDto);
   }
 

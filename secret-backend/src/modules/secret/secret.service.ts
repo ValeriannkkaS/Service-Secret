@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateSecretDto } from './dto/create-secret.dto';
-import { CONNECTION } from '../../constants/constansts';
 import { CryptoService } from '../crypto/crypto.service';
-import { GetByLinkInterface } from '../../interfaces/getByLinkInterface';
 import { PgService } from '../pg/pg.service';
+import { CreateSecretResponse } from './interfaces/response-create-secret.interface';
+import { GetSecretResponse } from './interfaces/response-get-secret.interface';
+import { IdResponse } from './interfaces/id-response.interface';
 
 @Injectable()
 export class SecretService {
@@ -13,7 +14,9 @@ export class SecretService {
   ) {}
 
   // todo jsdoc
-  async setSecretPhrase(secretDto: CreateSecretDto) {
+  async setSecretPhrase(
+    secretDto: CreateSecretDto,
+  ): Promise<CreateSecretResponse> {
     const { secretPhrase, availableViews, expiresInTimestamp, allowDeletions } =
       secretDto;
 
@@ -31,6 +34,7 @@ export class SecretService {
     };
     const info = await this.pgService.insert('secret_table', insertValues, '*');
     console.log(info);
+    //todo убрать все console.log()
     return {
       link: info.id,
       expiresAt: info.expires_at,
@@ -39,13 +43,8 @@ export class SecretService {
     };
   }
 
-  async getSecretPhraseByLink(link: string) {
-    const info: GetByLinkInterface = await this.pgService.find(
-      'secret_table',
-      '*',
-      'id',
-      link,
-    );
+  async getSecretPhraseByLink(link: string): Promise<GetSecretResponse> {
+    const info = await this.pgService.find('secret_table', '*', 'id', link);
 
     if (!info) {
       throw new HttpException(
@@ -100,13 +99,8 @@ export class SecretService {
     };
   }
 
-  async deleteSecretPhrase(link: string) {
-    const info: GetByLinkInterface = await this.pgService.find(
-      'secret_table',
-      '*',
-      'id',
-      link,
-    );
+  async deleteSecretPhrase(link: string): Promise<IdResponse> {
+    const info = await this.pgService.find('secret_table', '*', 'id', link);
 
     if (!info) {
       throw new HttpException(

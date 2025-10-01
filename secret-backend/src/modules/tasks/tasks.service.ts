@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { PgService } from '../pg/pg.service';
-import { ResponseInterface } from '../../interfaces/responseInterfaces';
+import { IdResponse } from '../secret/interfaces/id-response.interface';
 
 @Injectable()
 export class TasksService {
@@ -10,11 +10,11 @@ export class TasksService {
   @Cron('0 */5 * * * *')
   async handleCron() {
     console.log('Cron running tasks');
-    const ids: ResponseInterface[] = await this.pgService.findExpiredEntries(
+    const ids: IdResponse[] = await this.pgService.findExpiredEntries(
       'secret_table',
       'id',
     );
-    const deletedEntries: ResponseInterface[] = [];
+    const deletedEntries: IdResponse[] = [];
     for (let i = 0; i < ids.length; i++) {
       const deletedEntrie = await this.pgService.delete(
         'secret_table',
