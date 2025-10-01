@@ -1,25 +1,23 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 import { ConfigService } from '@nestjs/config';
-import { PgService } from '../pg/pg.service';
+import { EncryptSecret } from './interfaces/encrypt-secret.interface';
+import { GenerateSecret } from './interfaces/generate-secret.interface';
 
 // todo jsdoc
 @Injectable()
 export class CryptoService {
-  constructor(
-    @Inject(PgService) private pgService: PgService,
-    private configService: ConfigService,
-  ) {}
+  constructor(private configService: ConfigService) {}
 
   // todo interface
   // todo jsdoc + interface
-  async generateSecret(length: number) {
+  async generateSecret(length: number): Promise<GenerateSecret> {
     return {
       secretPhrase: randomBytes(length).toString('hex').slice(0, length),
     };
   }
 
-  async encryptSecretPhrase(phrase: string) {
+  async encryptSecretPhrase(phrase: string): Promise<EncryptSecret> {
     try {
       const iv = randomBytes(16);
       const ivBase64 = iv.toString('base64');
@@ -45,7 +43,10 @@ export class CryptoService {
     }
   }
 
-  async decryptSecretPhrase(encryptedPhraseBase64: string, ivBase64: string) {
+  async decryptSecretPhrase(
+    encryptedPhraseBase64: string,
+    ivBase64: string,
+  ): Promise<string> {
     try {
       const encryptedPhrase = Buffer.from(encryptedPhraseBase64, 'base64');
       const iv = Buffer.from(ivBase64, 'base64');

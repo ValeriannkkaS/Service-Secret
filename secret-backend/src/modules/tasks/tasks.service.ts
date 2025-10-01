@@ -8,7 +8,7 @@ export class TasksService {
   constructor(private readonly pgService: PgService) {}
 
   @Cron('0 */5 * * * *')
-  async handleCron() {
+  async handleCron(): Promise<void> {
     console.log('Cron running tasks');
     const ids: IdResponse[] = await this.pgService.findExpiredEntries(
       'secret_table',

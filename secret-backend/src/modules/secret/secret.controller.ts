@@ -14,7 +14,6 @@ import { CreateSecretPhrasePipe } from '../../pipes/create-secret-phrase.pipe';
 import { CryptoService } from '../crypto/crypto.service';
 import { createSecretPhraseShema } from '../../pipes/createSecretPhraseShema';
 import { ApiTags } from '@nestjs/swagger';
-import { ResponseCreateSecretDTO } from './dto/response-create-secret.dto';
 import { ControllerDecoratorAggregator } from '../../swagger.decorator';
 import templateStyleControllerConfig from './controller';
 
