@@ -2,6 +2,8 @@ import $api from '@/http'
 import type { SecretDto } from '@/constants&interfaces/interfaces.ts'
 
 export default class SecretServices {
+  private static apiUrl = import.meta.env.VITE_API_URL
+
   static async createSecret(secretDto: SecretDto) {
     try {
       const response = await $api.post<SecretDto>('/create-secret-phrase', {

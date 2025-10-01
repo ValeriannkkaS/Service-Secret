@@ -1,28 +1,30 @@
 <template>
   <HelpOptionsContainer>
-    <MainButton v-if="allowDeletions" class="orange option-btn" :on-click="deleteSecretPhrase"
-      >Удалить</MainButton
-    >
-    <MainButton class="violet option-btn" :on-click="returnBack">Передать еще</MainButton>
+    <MainButton v-if="allowDeletions" class="orange option-btn" :on-click="deleteSecretPhrase">{{
+      t('buttons.delete')
+    }}</MainButton>
+    <MainButton class="violet option-btn" :on-click="returnBack">{{
+      t('buttons.tryAgain')
+    }}</MainButton>
   </HelpOptionsContainer>
   <div v-if="passwordInfo" class="main-container">
-    <p class="note">Пароль доступен по ссылке:</p>
+    <p class="note">{{ t('password.available') }}</p>
     <div class="show-copy-link-container">
       <div class="link-container">
         <p class="link">{{ fullLink }}</p>
       </div>
-      <MainButton :on-click="copyLink" class="violet copy-btn">Скопировать</MainButton>
+      <MainButton :on-click="copyLink" class="violet copy-btn">{{ t('buttons.copy') }}</MainButton>
     </div>
   </div>
   <div v-if="!passwordInfo" class="main-container">
     <div class="show-copy-link-container">
       <div class="link-container">
-        <p class="link">Попробуйте передать еще раз</p>
+        <p class="link">{{ t('password.tryAgain') }}</p>
       </div>
     </div>
   </div>
-  <Modal :copied="copied" :deleted="''">Ссылка была скопирована в буфер обмена</Modal>
-  <Modal :copied="''" :deleted="deleted">Пароль был удален</Modal>
+  <Modal :copied="copied" :deleted="''">{{ t('modal.linkCopied') }}</Modal>
+  <Modal :copied="''" :deleted="deleted">{{ t('password.passwordDeleted') }}</Modal>
 </template>
 
 <script setup>
@@ -30,9 +32,11 @@ import HelpOptionsContainer from '@/components/inputs-helpers/HelpOptionsContain
 import MainButton from '@/components/buttons/MainButton.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 import { computed, ref } from 'vue'
 import Modal from '@/components/inputs-helpers/Modal.vue'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const store = useStore()

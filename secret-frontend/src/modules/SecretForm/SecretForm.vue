@@ -45,10 +45,12 @@ import {
 } from '@/constants&interfaces/optionsForSelect.ts'
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 import Help from '@/components/inputs-helpers/Help.vue'
 import router from '@/router/index.ts'
 
 const store = useStore()
+const { t } = useI18n()
 
 const secretPhrase = computed({
   get: () => store.state.secretForm.secretPhrase,

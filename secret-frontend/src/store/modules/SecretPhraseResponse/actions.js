@@ -26,7 +26,7 @@ export default {
       if (response.remainingViewsCount === 0) {
         setTimeout(() => {
           commit('deletePasswordInfo', response.link, { root: true })
-        }, 1000)
+        }, 300000)
       }
       console.log({ ...rootState.passwordInfo })
     } catch (err) {

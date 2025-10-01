@@ -1,20 +1,17 @@
 <template>
   <HelpOptionsContainer>
-    <MainButton v-if="allowDeletions" class="orange option-btn" :on-click="deleteSecretPhrase"
-      >Удалить</MainButton
-    >
-    <MainButton :on-click="returnBack" class="violet option-btn">Передать еще</MainButton>
+    <MainButton v-if="allowDeletions" class="orange option-btn" :on-click="deleteSecretPhrase">{{
+      t('buttons.delete')
+    }}</MainButton>
+    <MainButton :on-click="returnBack" class="violet option-btn">{{
+      t('buttons.tryAgain')
+    }}</MainButton>
   </HelpOptionsContainer>
   <div class="response-container">
-    <p v-if="passwordInfo">Ваш пароль:</p>
+    <p v-if="passwordInfo">{{ t('yourPassword.message') }}</p>
     <div class="secret-phrase-container" v-if="passwordInfo">
       <div v-if="loading" class="loading">
-        <p>Загрузка...</p>
-      </div>
-      <div v-if="error" class="error">
-        <p>
-          Срок действия пароля истек, либо ссылка недействительна или исчерпала все свои просмотры
-        </p>
+        <p>{{ t('loading.message') }}</p>
       </div>
       <div v-if="secretPhrase && show">
         <p>{{ secretPhrase }}</p>
@@ -27,20 +24,20 @@
       v-if="!show && secretPhrase && passwordInfo"
       class="show-copy-btn orange"
       :on-click="showPassword"
-      >Показать пароль</MainButton
+      >{{ t('buttons.show') }}</MainButton
     >
     <MainButton
       v-if="show && secretPhrase && passwordInfo"
       class="show-copy-btn violet"
       :on-click="copyPassword"
-      >Скопировать</MainButton
+      >{{ t('buttons.copy') }}</MainButton
     >
     <div v-if="!passwordInfo" class="secret-phrase-container">
-      <p>Попробуйте передать еще раз</p>
+      <p>{{ t('password.tryAgain') }}</p>
     </div>
   </div>
-  <Modal :copied="copied" :deleted="''">Пароль был скопирован в буфер обмена</Modal>
-  <Modal :deleted="deleted" :copied="''">Пароль был удален</Modal>
+  <Modal :copied="copied" :deleted="''">{{ t('modal.passwordCopied') }}</Modal>
+  <Modal :deleted="deleted" :copied="''">{{ t('modal.passwordDeleted') }}</Modal>
 </template>
 
 <script setup>
@@ -51,13 +48,14 @@ import { computed, ref, watch } from 'vue'
 import HelpOptionsContainer from '@/components/inputs-helpers/HelpOptionsContainer.vue'
 import { useStore } from 'vuex'
 import Modal from '@/components/inputs-helpers/Modal.vue'
+import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
 const store = useStore()
+const { t } = useI18n()
 const copied = ref('')
 const deleted = ref('')
 const loading = computed(() => store.state.secretPhraseResponse.loading)
-const error = computed(() => store.state.secretPhraseResponse.error)
 const secretPhrase = computed(() => store.state.secretPhraseResponse.secretPhrase)
 const unseenSecretPhrase = computed(() => '*'.repeat(secretPhrase.value.length))
 const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.link]?.allowDeletions)

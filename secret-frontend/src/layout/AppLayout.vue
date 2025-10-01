@@ -3,11 +3,25 @@
   <div class="background">
     <div class="form-secret-phrase-container">
       <RouterView />
+      <MainButton v-if="isRu" :on-click="() => (locale = 'en')" class="orange change-lang-btn"
+        >EN</MainButton
+      >
+      <MainButton v-if="!isRu" :on-click="() => (locale = 'ru')" class="violet change-lang-btn"
+        >RU</MainButton
+      >
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MainButton from '@/components/buttons/MainButton.vue'
+import { useI18n } from 'vue-i18n'
+import { computed, watch } from 'vue'
+
+const { locale } = useI18n()
+
+const isRu = computed(() => locale.value === 'ru')
+</script>
 
 <style scoped>
 .background {
@@ -30,6 +44,13 @@
   background: #ebebeb;
   border-radius: 30px;
   box-shadow: 5px 5px 10px rgba(121, 121, 121, 0.63);
+}
+.change-lang-btn {
+  position: fixed;
+  top: 50px;
+  right: 40px;
+  height: 43px;
+  width: 150px;
 }
 @media (max-width: 1001px) {
   .form-secret-phrase-container {
