@@ -7,6 +7,10 @@ import { GetSecretResponse } from './interfaces/response-get-secret.interface';
 import { IdResponse } from './interfaces/id-response.interface';
 import { SecretEntry } from '../pg/interfaces/secret-entry.interface';
 
+/**
+ * Сервис модуля secret.module для обработки запросов по маршрутам для записи, удаления, получения секретных фраз,
+ * использует методы из других модулей
+ * */
 @Injectable()
 export class SecretService {
   constructor(
@@ -14,7 +18,6 @@ export class SecretService {
     @Inject(PgService) private pgService: PgService,
   ) {}
 
-  // todo jsdoc
   /**
    * Получает объект с такими полями:
    * 1 - секретной фразой

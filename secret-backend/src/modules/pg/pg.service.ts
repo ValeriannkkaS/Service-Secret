@@ -2,6 +2,9 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CONNECTION } from '../../constants/constansts';
 import { Pool } from 'pg';
 
+/**
+ * Сервис модуля pg.module для взаимодействия с базой данных Postgres
+ * */
 @Injectable()
 export class PgService {
   constructor(@Inject(CONNECTION) private connection: Pool) {}

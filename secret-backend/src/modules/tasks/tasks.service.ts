@@ -3,6 +3,10 @@ import { Cron } from '@nestjs/schedule';
 import { PgService } from '../pg/pg.service';
 import { IdResponse } from '../secret/interfaces/id-response.interface';
 
+/**
+ * Сервис модуля tasks.module для периодического удаления истекших фраз из базы данных,
+ * использует методы из модуля pg.module
+ * */
 @Injectable()
 export class TasksService {
   constructor(private readonly pgService: PgService) {}

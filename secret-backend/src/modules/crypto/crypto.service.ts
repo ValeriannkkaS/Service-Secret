@@ -4,13 +4,13 @@ import { ConfigService } from '@nestjs/config';
 import { EncryptSecret } from './interfaces/encrypt-secret.interface';
 import { GenerateSecret } from './interfaces/generate-secret.interface';
 
-// todo jsdoc
+/**
+ * Сервис модуля crypto.module для шифрования/дешифрования секретных фраз
+ * */
 @Injectable()
 export class CryptoService {
   constructor(private configService: ConfigService) {}
 
-  // todo interface
-  // todo jsdoc + interface
   /**
    * Получает длину нужной секретной фразы аргументом в виде числа, генерирует случайную последовательность байт
    * заданной длины, а затем преобразует в строку кодировки hex и обрезает до нужной длины, потом возвращает получившуюся
