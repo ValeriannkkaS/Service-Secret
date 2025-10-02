@@ -10,19 +10,8 @@ services:
       - ./secret-backend/.env.production
     depends_on:
       - postgres
-
-#// todo локально не нужен
-  secret-frontend:
-    container_name: secret-frontend
-    build:
-      context: ./secret-frontend
-      dockerfile: Dockerfile
-    depends_on:
-      - secret-backend
-    ports:
-      - 5174:5173
-    env_file:
-      - ./secret-frontend/.env.production
+    command: >
+      sh -c "npm run migrate up && node dist/main"
 
   postgres:
     image: postgres:17

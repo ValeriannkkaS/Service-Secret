@@ -70,8 +70,8 @@ const copyPassword = () => {
     copied.value = ''
   }, 1000)
 }
-const deleteSecretPhrase = () => {
-  store.dispatch('secretForm/deleteSecretPhrase', route.params.link)
+const deleteSecretPhrase = async () => {
+  await store.dispatch('secretForm/deleteSecretPhrase', route.params.link)
   deleted.value = 'deleted'
   setTimeout(() => {
     deleted.value = ''
