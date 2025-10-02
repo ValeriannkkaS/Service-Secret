@@ -10,12 +10,6 @@
       <MainButton class="submit-btn violet" type="submit" :disabled="!secretPhrase">{{
         t('buttons.pass')
       }}</MainButton>
-      <transition name="fade" mode="out-in">
-        <Help v-show="loading" class="help loading">{{ t('help.loadingText') }}</Help>
-      </transition>
-      <transition name="fade" mode="out-in">
-        <Help v-if="error" class="help error">{{ t('help.errorText') }}</Help>
-      </transition>
     </div>
     <div class="divider"></div>
     <div class="right-form-part">
@@ -49,7 +43,6 @@ import {
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
-import Help from '@/components/inputs-helpers/Help.vue'
 import { useRouter } from 'vue-router'
 
 const store = useStore()
@@ -77,8 +70,8 @@ const allowDeletions = computed({
   get: () => store.state.secretForm.allowDeletions,
   set: (value) => store.commit('secretForm/setAllowDeletions', value),
 })
-const error = computed(() => store.state.secretForm.error)
-const loading = computed(() => store.state.secretForm.loading)
+const error = computed(() => store.state.error)
+const loading = computed(() => store.state.loading)
 const link = computed(() => store.state.link)
 
 const setSecretPhrase = async () => {
@@ -117,20 +110,6 @@ const generateSecret = async () => {
   display: flex;
   gap: 1rem;
 }
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
-}
 
 /*элементы формы*/
 .submit-btn {
@@ -155,10 +134,6 @@ const generateSecret = async () => {
 .submit-btn,
 .input {
   width: 90%;
-}
-.help {
-  width: 100%;
-  height: 60px;
 }
 .checkbox {
   accent-color: #9647ef;

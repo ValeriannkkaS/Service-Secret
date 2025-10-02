@@ -3,8 +3,8 @@ import SecretServices from '@/services/secret-services.js'
 export default {
   async setSecretPhrase({ commit, getters }) {
     commit('setLink', null, { root: true })
-    commit('setLoading', true)
-    commit('setError', false)
+    commit('setLoading', true, { root: true })
+    commit('setError', false, { root: true })
     try {
       const response = await SecretServices.createSecret(getters.secretDto)
       commit('setLink', response.link, { root: true })
@@ -23,32 +23,38 @@ export default {
       )
       return true
     } catch (err) {
-      commit('setError', true)
-      setTimeout(() => commit('setError', false), 3000)
+      commit('setError', true, { root: true })
+      setTimeout(() => commit('setError', false, { root: true }), 3000)
       return false
     } finally {
-      commit('setLoading', false)
+      commit('setLoading', false, { root: true })
     }
   },
   async deleteSecretPhrase({ commit, getters }, link) {
+    commit('setLoading', true, { root: true })
+    commit('setError', false, { root: true })
     try {
       const response = await SecretServices.deleteSecretPhrase(link)
       commit('setLink', null, { root: true })
       commit('deletePasswordInfo', response.id, { root: true })
     } catch (err) {
-      commit('setError', 'что-то пошло не так') // todo поправить -> сейчас эта ошибка летит в форму
-      setTimeout(() => commit('setError', null), 3000)
+      commit('setError', true, { root: true })
+      setTimeout(() => commit('setError', false, { root: true }), 3000)
+    } finally {
+      commit('setLoading', false, { root: true })
     }
   },
   async generateSecretPhrase({ state, commit }) {
-    commit('setLoading', true)
+    commit('setLoading', true, { root: true })
+    commit('setError', false, { root: true })
     try {
       const response = await SecretServices.generateSecretPhrase(state.countOfSymbols)
       commit('setSecretPhrase', response.secretPhrase)
     } catch (err) {
-      commit('setError', 'ошибка генерации пароля')
+      commit('setError', true, { root: true })
+      setTimeout(() => commit('setError', false, { root: true }), 3000)
     } finally {
-      commit('setLoading', false)
+      commit('setLoading', false, { root: true })
     }
   },
 }

@@ -2,12 +2,6 @@ export default {
   setSecretPhrase(state, secretPhrase) {
     state.secretPhrase = secretPhrase
   },
-  setError(state, error) {
-    state.error = error
-  },
-  setLoading(state, loading) {
-    state.loading = loading
-  },
   setCountOfSymbols(state, countOfSymbols) {
     state.countOfSymbols = countOfSymbols
   },

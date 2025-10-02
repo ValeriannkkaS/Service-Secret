@@ -1,7 +1,5 @@
 export default {
   secretPhrase: null,
-  error: false,
-  loading: false,
   countOfViews: 1,
   countOfSymbols: 8,
   expiresIn: 86400000,

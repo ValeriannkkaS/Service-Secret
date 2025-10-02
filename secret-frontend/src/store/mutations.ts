@@ -11,4 +11,10 @@ export default {
     state.passwordInfo = {}
     console.log(state.passwordInfo)
   },
+  setError(state, error) {
+    state.error = error
+  },
+  setLoading(state, loading) {
+    state.loading = loading
+  },
 }
