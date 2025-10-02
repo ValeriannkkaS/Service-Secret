@@ -5,4 +5,3 @@ export default {
   expiresIn: 86400000,
   allowDeletions: false,
 }
-//todo сделать стейт для загрузки loading

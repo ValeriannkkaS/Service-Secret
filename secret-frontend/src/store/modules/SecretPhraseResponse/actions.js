@@ -2,9 +2,9 @@ import SecretServices from '@/services/secret-services.js'
 
 export default {
   async getSecretPhraseByLink({ state, commit, rootState, getters }, link) {
-    commit('setError', null)
+    commit('setError', false, { root: true })
+    commit('setLoading', true, { root: true })
     commit('setSecretPhrase', null)
-    commit('setLoading', true)
     commit('setShow', false)
     try {
       const response = await SecretServices.getSecretPhrase(link)
@@ -23,19 +23,10 @@ export default {
         },
         { root: true },
       )
-      if (response.remainingViewsCount === 0) {
-        const link = response.link
-        setTimeout(() => {
-          commit('deletePasswordInfo', link, { root: true })
-        }, 300000)
-        //todo подумать над изменением логики во имя избежания бага
-      }
-      console.log({ ...rootState.passwordInfo })
     } catch (err) {
-      commit('setError', true)
-      //todo сделать вывод ошибок
+      commit('deletePasswordInfo', link, { root: true })
     } finally {
-      commit('setLoading', false)
+      commit('setLoading', false, { root: true })
     }
   },
 }

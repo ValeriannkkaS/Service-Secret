@@ -10,9 +10,6 @@
   <div class="response-container">
     <p v-if="passwordInfo">{{ t('yourPassword.message') }}</p>
     <div class="secret-phrase-container" v-if="passwordInfo">
-      <div v-if="loading" class="loading">
-        <p>{{ t('loading.message') }}</p>
-      </div>
       <div v-if="secretPhrase && show">
         <p>{{ secretPhrase }}</p>
       </div>
@@ -55,7 +52,6 @@ const store = useStore()
 const { t } = useI18n()
 const copied = ref('')
 const deleted = ref('')
-const loading = computed(() => store.state.secretPhraseResponse.loading)
 const secretPhrase = computed(() => store.state.secretPhraseResponse.secretPhrase)
 const unseenSecretPhrase = computed(() => '*'.repeat(secretPhrase.value.length))
 const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.link]?.allowDeletions)
