@@ -11,10 +11,10 @@
         t('buttons.pass')
       }}</MainButton>
       <transition name="fade" mode="out-in">
-        <Help v-show="loading" class="help loading">Подождите</Help>
+        <Help v-show="loading" class="help loading">{{ t('help.loadingText') }}</Help>
       </transition>
       <transition name="fade" mode="out-in">
-        <Help v-if="error" class="help error">Ошибка</Help>
+        <Help v-if="error" class="help error">{{ t('help.errorText') }}</Help>
       </transition>
     </div>
     <div class="divider"></div>

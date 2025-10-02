@@ -22,4 +22,8 @@ export default {
     orAfter: 'or after',
     views: 'view(s)',
   },
+  help: {
+    loadingText: 'Loading... Please wait...',
+    errorText: 'Something went wrong, please try again later',
+  },
 }
