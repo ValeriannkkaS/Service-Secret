@@ -10,7 +10,12 @@
       <MainButton class="submit-btn violet" type="submit" :disabled="!secretPhrase">{{
         t('buttons.pass')
       }}</MainButton>
-      <Help class="error" v-if="error" :error="error"></Help>
+      <transition name="fade" mode="out-in">
+        <Help v-show="loading" class="help loading">Подождите</Help>
+      </transition>
+      <transition name="fade" mode="out-in">
+        <Help v-if="error" class="help error">Ошибка</Help>
+      </transition>
     </div>
     <div class="divider"></div>
     <div class="right-form-part">
@@ -45,9 +50,10 @@ import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import Help from '@/components/inputs-helpers/Help.vue'
-import router from '@/router/index.ts'
+import { useRouter } from 'vue-router'
 
 const store = useStore()
+const router = useRouter()
 
 const { t } = useI18n()
 
@@ -72,11 +78,14 @@ const allowDeletions = computed({
   set: (value) => store.commit('secretForm/setAllowDeletions', value),
 })
 const error = computed(() => store.state.secretForm.error)
+const loading = computed(() => store.state.secretForm.loading)
 const link = computed(() => store.state.link)
 
 const setSecretPhrase = async () => {
-  await store.dispatch('secretForm/setSecretPhrase')
-  router.push(`/show/${link.value}`)
+  const redirect = await store.dispatch('secretForm/setSecretPhrase')
+  if (redirect) {
+    router.push(`/show/${link.value}`)
+  }
 }
 const generateSecret = async () => {
   store.dispatch('secretForm/generateSecretPhrase')
@@ -108,6 +117,20 @@ const generateSecret = async () => {
   display: flex;
   gap: 1rem;
 }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+}
 
 /*элементы формы*/
 .submit-btn {
@@ -132,6 +155,10 @@ const generateSecret = async () => {
 .submit-btn,
 .input {
   width: 90%;
+}
+.help {
+  width: 100%;
+  height: 60px;
 }
 .checkbox {
   accent-color: #9647ef;

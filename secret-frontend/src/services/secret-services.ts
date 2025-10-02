@@ -8,7 +8,7 @@ export default class SecretServices {
     try {
       return await fetchApi.post<SecretDto>(`${this.apiUrl}/create-secret-phrase`, secretDto)
     } catch (error) {
-      console.error(error)
+      console.log(error)
       throw error
     }
   }
