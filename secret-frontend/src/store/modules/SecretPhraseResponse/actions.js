@@ -1,14 +1,13 @@
 import SecretServices from '@/services/secret-services.js'
 
 export default {
-  async getSecretPhraseByLink({ state, commit, rootState, getters }, link) {
+  async getSecretPhraseByLink({ commit }, link) {
     commit('setError', false, { root: true })
     commit('setLoading', true, { root: true })
     commit('setSecretPhrase', null)
     commit('setShow', false)
     try {
       const response = await SecretServices.getSecretPhrase(link)
-      console.log(response)
       commit('setSecretPhrase', response.decryptedPhrase)
       commit(
         'setPasswordInfo',

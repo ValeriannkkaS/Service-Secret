@@ -31,7 +31,6 @@ export class PgService {
     try {
       const queryText = `DELETE FROM ${table} WHERE ${where} = $1 RETURNING ${returning}`;
       const result = await client.query(queryText, [what]);
-      console.log(result);
       return result.rows[0];
     } catch (err) {
       throw new HttpException(
@@ -170,7 +169,6 @@ export class PgService {
       await client.query('COMMIT');
       return result.rows[0] as Returning;
     } catch (error) {
-      console.log(error);
       await client.query('ROLLBACK');
       throw new HttpException(
         'failed to Insert entry',

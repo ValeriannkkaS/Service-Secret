@@ -27,7 +27,7 @@
   <Modal :copied="''" :deleted="deleted">{{ t('modal.passwordDeleted') }}</Modal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import HelpOptionsContainer from '@/components/inputs-helpers/HelpOptionsContainer.vue'
 import MainButton from '@/components/buttons/MainButton.vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -49,7 +49,7 @@ const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.li
 
 const domain = window.location.host
 const fullLink = computed(() =>
-  passwordInfo ? `http://${domain}/${passwordInfo?.value?.link}` : null,
+  passwordInfo.value ? `http://${domain}/${passwordInfo?.value?.link}` : null,
 )
 
 const deleteSecretPhrase = () => {

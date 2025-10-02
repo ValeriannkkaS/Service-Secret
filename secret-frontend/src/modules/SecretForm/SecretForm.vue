@@ -32,7 +32,7 @@
   </form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import MainButton from '@/components/buttons/MainButton.vue'
 import Select from '@/components/inputs-helpers/Select.vue'
 import {
@@ -70,8 +70,6 @@ const allowDeletions = computed({
   get: () => store.state.secretForm.allowDeletions,
   set: (value) => store.commit('secretForm/setAllowDeletions', value),
 })
-const error = computed(() => store.state.error)
-const loading = computed(() => store.state.loading)
 const link = computed(() => store.state.link)
 
 const setSecretPhrase = async () => {

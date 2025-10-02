@@ -8,7 +8,6 @@ export default class SecretServices {
     try {
       return await fetchApi.post<SecretDto>(`${this.apiUrl}/create-secret-phrase`, secretDto)
     } catch (error) {
-      console.log(error)
       throw error
     }
   }
@@ -17,7 +16,6 @@ export default class SecretServices {
     try {
       return await fetchApi.get<SecretDto>(`${this.apiUrl}/${link}`)
     } catch (error) {
-      console.error(error)
       throw error
     }
   }
@@ -26,7 +24,6 @@ export default class SecretServices {
     try {
       return await fetchApi.delete<SecretDto>(`${this.apiUrl}/${link}`)
     } catch (error) {
-      console.error(error)
       throw error
     }
   }
@@ -35,7 +32,6 @@ export default class SecretServices {
     try {
       return await fetchApi.get<SecretDto>(`${this.apiUrl}/generate/${length}`)
     } catch (error) {
-      console.error(error)
       throw error
     }
   }

@@ -30,7 +30,7 @@ export default {
       commit('setLoading', false, { root: true })
     }
   },
-  async deleteSecretPhrase({ commit, getters }, link) {
+  async deleteSecretPhrase({ commit }, link) {
     commit('setLoading', true, { root: true })
     commit('setError', false, { root: true })
     try {

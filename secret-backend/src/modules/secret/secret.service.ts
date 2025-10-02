@@ -56,8 +56,6 @@ export class SecretService {
       insertValues,
       '*',
     );
-    console.log(info);
-    //todo убрать все console.log()
     return {
       link: info.id,
       expiresAt: info.expires_at.toISOString(),

@@ -5,7 +5,6 @@ import type { ObjectSchema } from 'joi';
 export class CreateSecretPhrasePipe implements PipeTransform {
   constructor(private schema: ObjectSchema) {}
 
-  // todo оставить валидацию только на беке
   transform(value: any): any {
     const { error } = this.schema.validate(value);
 

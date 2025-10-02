@@ -13,6 +13,5 @@ export default {
   },
   setAllowDeletions(state, allowDeletions) {
     state.allowDeletions = allowDeletions
-    console.log(state.allowDeletions)
   },
 }

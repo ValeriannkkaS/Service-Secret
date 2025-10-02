@@ -1,18 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import dotenv from 'dotenv';
 import helmet from 'helmet';
-import * as process from 'node:process';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
-dotenv.config();
-
-const PORT = process.env.PORT || 3000;
-
-// todo dotenv убрать
-// todo убрать не нужные тебе пакеты
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const configService = app.get(ConfigService);
+
+  const PORT = configService.get<number>('PORT') || 3000;
+  const CLIENT_URL = configService.get<string>('CLIENT_URL') || '';
 
   const config = new DocumentBuilder()
     .setTitle('Service Secret')
@@ -26,7 +24,7 @@ async function bootstrap() {
 
   app.use(helmet());
   app.enableCors({
-    origin: process.env.CLIENT_URL,
+    origin: CLIENT_URL,
     credentials: true,
     methods: ['GET', 'POST', 'DELETE'],
   });

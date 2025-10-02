@@ -37,7 +37,7 @@
   <Modal :deleted="deleted" :copied="''">{{ t('modal.passwordDeleted') }}</Modal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import MainButton from '@/components/buttons/MainButton.vue'
 import router from '@/router/index.ts'
 import { useRoute } from 'vue-router'
