@@ -30,4 +30,8 @@
   background: #e4bb0d;
   border-color: #8d7004;
 }
+@media (max-width: 1001px) {
+  .help {
+  }
+}
 </style>

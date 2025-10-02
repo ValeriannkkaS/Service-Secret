@@ -91,5 +91,12 @@ const isRu = computed(() => locale.value === 'ru')
     padding: 0;
     min-width: 350px;
   }
+  .help {
+    position: absolute;
+    bottom: 0;
+    transform: translateY(-350%);
+    width: 90%;
+    margin-left: 50px;
+  }
 }
 </style>
