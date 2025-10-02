@@ -1,11 +1,11 @@
 import { createStore } from 'vuex'
 
-import actions from './actions.ts'
-import mutations from './mutations'
-import getters from './getters.ts'
-import state from './state.ts'
-import secretForm from '@/store/modules/SecretForm/index.ts'
-import secretPhraseResponse from '@/store/modules/SecretPhraseResponse/index.ts'
+import actions from './actions.js'
+import mutations from './mutations.js'
+import getters from './getters.js'
+import state from './state.js'
+import secretForm from '@/store/modules/SecretForm/index.js'
+import secretPhraseResponse from '@/store/modules/SecretPhraseResponse/index.js'
 import createPersistedState from 'vuex-persistedstate'
 
 const store = createStore({

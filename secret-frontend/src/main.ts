@@ -10,7 +10,7 @@ import enApp from './langs/App/en'
 import ruApp from './langs/App/ru'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+import store from './store/index.js'
 
 const i18n = createI18n({
   locale: 'en',
