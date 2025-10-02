@@ -7,7 +7,6 @@
         type="text"
         :placeholder="t('formNote.placeholder')"
       />
-      <!--todo langs -->
       <MainButton class="submit-btn violet" type="submit" :disabled="!secretPhrase">{{
         t('buttons.pass')
       }}</MainButton>
@@ -21,7 +20,6 @@
         }}</MainButton>
         <Select class="select" v-model="countOfSymbols" :options="optionsCountOfSymbols"></Select>
       </div>
-      <!--todo langs i18n-->
       <p>{{ t('formNote.deleteAfter') }}</p>
       <div class="right-form-part-options-container">
         <Select class="select" v-model="expiresIn" :options="optionsExpiresIn"></Select>

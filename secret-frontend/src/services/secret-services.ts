@@ -1,4 +1,4 @@
-import $api from '@/http'
+import { fetchApi } from '@/http'
 import type { SecretDto } from '@/constants&interfaces/interfaces.ts'
 
 export default class SecretServices {
@@ -6,38 +6,36 @@ export default class SecretServices {
 
   static async createSecret(secretDto: SecretDto) {
     try {
-      const response = await $api.post<SecretDto>('/create-secret-phrase', {
-        ...secretDto,
-      })
-      return response
+      return await fetchApi.post<SecretDto>(`${this.apiUrl}/create-secret-phrase`, secretDto)
     } catch (error) {
+      console.error(error)
       throw error
     }
   }
 
-  static async getSecretPhrase(link: string) {
+  static async getSecretPhrase(link: string): Promise<SecretDto> {
     try {
-      const response = await $api.get(`/${link}`)
-      return response.data
+      return await fetchApi.get<SecretDto>(`${this.apiUrl}/${link}`)
     } catch (error) {
+      console.error(error)
       throw error
     }
   }
 
-  static async deleteSecretPhrase(link: string) {
+  static async deleteSecretPhrase(link: string): Promise<SecretDto> {
     try {
-      const response = await $api.delete(`/${link}`)
-      return response.data
+      return await fetchApi.delete<SecretDto>(`${this.apiUrl}/${link}`)
     } catch (error) {
+      console.error(error)
       throw error
     }
   }
 
-  static async generateSecretPhrase(length: number) {
+  static async generateSecretPhrase(length: number): Promise<SecretDto> {
     try {
-      const response = await $api.get(`/generate/${length}`)
-      return response.data
+      return await fetchApi.get<SecretDto>(`${this.apiUrl}/generate/${length}`)
     } catch (error) {
+      console.error(error)
       throw error
     }
   }

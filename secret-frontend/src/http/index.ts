@@ -1,9 +1,19 @@
-import axios from 'axios'
+async function http<T>(url: string, options?: RequestInit): Promise<T> {
+  const response = await fetch(url, {
+    headers: { 'Content-Type': 'application/json', ...(options?.headers || {}) },
+    ...options,
+  })
 
-const API_URL = import.meta.env.VITE_API_URL
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(error || response.statusText)
+  }
 
-const $api = axios.create({
-  baseURL: API_URL,
-})
+  return response.json() as Promise<T>
+}
 
-export default $api
+export const fetchApi = {
+  get: <T>(url: string) => http<T>(url),
+  post: <T>(url: string, body: any) => http<T>(url, { method: 'POST', body: JSON.stringify(body) }),
+  delete: <T>(url: string) => http<T>(url, { method: 'DELETE' }),
+}

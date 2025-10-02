@@ -1,7 +1,7 @@
 <template>
   <select v-model="model">
     <option v-for="option in options" :value="option.value" :key="option.id">
-      {{ option.text[x] }}
+      {{ option.text[lang] }}
     </option>
   </select>
 </template>
@@ -13,7 +13,7 @@ import { computed } from 'vue'
 
 const model = defineModel()
 const { locale } = useI18n()
-const x = computed(() => locale.value)
+const lang = computed(() => locale.value)
 
 defineProps<{
   options: optionForSelect[]

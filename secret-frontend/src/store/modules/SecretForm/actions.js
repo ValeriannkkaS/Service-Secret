@@ -4,16 +4,16 @@ export default {
   async setSecretPhrase({ commit, getters }) {
     try {
       const response = await SecretServices.createSecret(getters.secretDto)
-      commit('setLink', response.data.link, { root: true })
+      commit('setLink', response.link, { root: true })
       commit(
         'setPasswordInfo',
         {
-          link: response.data.link,
+          link: response.link,
           passwordInfo: {
-            allowDeletions: response.data.allowDeletions,
-            expiresAt: response.data.expiresAt,
-            remainingViewsCount: response.data.remainingViewsCount,
-            link: response.data.link,
+            allowDeletions: response.allowDeletions,
+            expiresAt: response.expiresAt,
+            remainingViewsCount: response.remainingViewsCount,
+            link: response.link,
           },
         },
         { root: true },

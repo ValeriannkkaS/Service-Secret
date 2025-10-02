@@ -37,5 +37,4 @@ app.use(store)
 app.use(i18n)
 
 // todo снести лишнее пакеты и папки и файлы и импорты
-// todo axios -> fetch
 app.mount('#app')
