@@ -2,6 +2,9 @@ import SecretServices from '@/services/secret-services.js'
 
 export default {
   async setSecretPhrase({ commit, getters }) {
+    commit('setLink', null, { root: true })
+    commit('setLoading', true)
+    commit('setError', false)
     try {
       const response = await SecretServices.createSecret(getters.secretDto)
       commit('setLink', response.link, { root: true })
@@ -18,10 +21,13 @@ export default {
         },
         { root: true },
       )
+      return true
     } catch (err) {
-      commit('setError', 'что-то пошло не так')
-      setTimeout(() => commit('setError', null), 3000)
-      //todo сделать кастомный вывод ошибки и loading а также обрыв редиректа при возвращении ошибки с сервера
+      commit('setError', true)
+      setTimeout(() => commit('setError', false), 3000)
+      return false
+    } finally {
+      commit('setLoading', false)
     }
   },
   async deleteSecretPhrase({ commit, getters }, link) {
@@ -35,11 +41,14 @@ export default {
     }
   },
   async generateSecretPhrase({ state, commit }) {
+    commit('setLoading', true)
     try {
       const response = await SecretServices.generateSecretPhrase(state.countOfSymbols)
       commit('setSecretPhrase', response.secretPhrase)
     } catch (err) {
       commit('setError', 'ошибка генерации пароля')
+    } finally {
+      commit('setLoading', false)
     }
   },
 }
