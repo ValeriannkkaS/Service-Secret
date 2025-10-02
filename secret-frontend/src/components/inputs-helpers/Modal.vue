@@ -38,8 +38,8 @@ const props = defineProps<{
   .modal {
     position: absolute;
     top: 0;
-    font-size: 16px;
-    transform: translateY(100%);
+    font-size: 20px;
+    transform: translateY(200%);
     width: 90%;
   }
 }
