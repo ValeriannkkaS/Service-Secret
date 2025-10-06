@@ -41,7 +41,7 @@ import {
   optionsCountOfViews,
   optionsExpiresIn,
 } from '@/constants&interfaces/optionsForSelect.ts'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -51,10 +51,8 @@ const router = useRouter()
 
 const { t } = useI18n()
 
-const secretPhrase = computed({
-  get: () => store.state.secretForm.secretPhrase,
-  set: (value) => store.commit('secretForm/setSecretPhrase', value),
-})
+const secretPhrase = ref(null)
+
 const countOfSymbols = computed({
   get: () => store.state.secretForm.countOfSymbols,
   set: (value) => store.commit('secretForm/setCountOfSymbols', value),
@@ -83,6 +81,9 @@ const setSecretPhrase = async () => {
 const generateSecret = async () => {
   store.dispatch('secretForm/generateSecretPhrase')
 }
+watch(secretPhrase, () => {
+  store.commit('setSecretPhrase', secretPhrase.value)
+})
 </script>
 
 <style scoped>
