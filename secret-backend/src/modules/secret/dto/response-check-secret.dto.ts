@@ -10,8 +10,15 @@ export class ResponseCheckSecretDto {
 
   @ApiProperty({
     description: 'exist password or not',
-    type: String,
+    type: Boolean,
     example: true,
   })
   exist: boolean;
+
+  @ApiProperty({
+    description: 'this field shows, available password to show, or not',
+    type: Boolean,
+    example: true,
+  })
+  passwordIsLive: boolean;
 }

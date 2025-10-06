@@ -85,15 +85,12 @@ export class SecretService {
       'id',
       link,
     );
-
     if (!info) {
-      throw new HttpException(
-        'failed to get secret phrase (secret phrase already destroyed or link is invalid)',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('entry not found', HttpStatus.NOT_FOUND);
     }
+
     const {
-      iv,
+      iv: iv,
       remaining_views_count: remainingViewsCount,
       encrypted_value: encryptedValue,
       expires_at: expiresIn,
@@ -101,13 +98,22 @@ export class SecretService {
       id,
     } = info;
 
+    if (!encryptedValue || !iv) {
+      throw new HttpException(
+        'failed to get secret phrase (secret phrase already destroyed or link is invalid)1',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     if (remainingViewsCount <= 0 || !expiresIn || expiresIn < new Date()) {
-      await this.pgService.delete<{ id: string }>(
+      await this.pgService.update(
         'secret_table',
+        'encrypted_value',
+        null,
         'id',
         link,
-        'id',
       );
+      await this.pgService.update('secret_table', 'iv', null, 'id', link);
 
       throw new HttpException(
         'the number of requests or the available time for requests has been exhausted',
@@ -124,12 +130,14 @@ export class SecretService {
     remainingViewsCount2--;
 
     if (remainingViewsCount2 <= 0) {
-      await this.pgService.delete<{ id: string }>(
+      await this.pgService.update(
         'secret_table',
+        'encrypted_value',
+        null,
         'id',
         link,
-        'id',
       );
+      await this.pgService.update('secret_table', 'iv', null, 'id', link);
     }
 
     await this.pgService.update(
@@ -212,9 +220,12 @@ export class SecretService {
       throw new HttpException('this link is not found', HttpStatus.NOT_FOUND);
     }
 
+    const passwordIsLive = info.encrypted_value ? true : false;
+
     return {
       link: link,
       exist: true,
+      passwordIsLive,
     };
   }
 }
