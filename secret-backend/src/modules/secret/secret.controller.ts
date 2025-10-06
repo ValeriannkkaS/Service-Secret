@@ -44,6 +44,14 @@ export class SecretController {
     return this.secretService.getSecretPhraseByLink(link);
   }
 
+  @Get('/check/:link')
+  @ControllerDecoratorAggregator(
+    templateStyleControllerConfig.checkSecretPhraseByLink,
+  )
+  checkSecretPhraseByLink(@Param('link', new ParseUUIDPipe()) link: string) {
+    return this.secretService.checkSecretPhraseByLink(link);
+  }
+
   @Get('/generate/:length')
   @ControllerDecoratorAggregator(
     templateStyleControllerConfig.generateSecretPhrase,

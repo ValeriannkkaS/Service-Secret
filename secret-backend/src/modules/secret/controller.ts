@@ -3,6 +3,8 @@ import { BadRequestResponseDto } from './dto/bad-request-response.dto';
 import { ResponseGetSecretByLinkDTO } from './dto/response-get-secret.dto';
 import { ResponseDeleteSecretByLinkDTO } from './dto/response-delete-secret.dto';
 import { ResponseGenerateSecretDTO } from './dto/response-get-generate-secret.dto';
+import { ResponseCheckSecretDto } from './dto/response-check-secret.dto';
+import { NotFoundResponseDto } from './dto/not-found-response.dto';
 
 const createSecretPhrase = {
   operation: 'creating secret phrase and save to db',
@@ -26,6 +28,14 @@ const getSecretPhraseByLink = {
   ],
 };
 
+const checkSecretPhraseByLink = {
+  operation: 'check existing secret phrase by link',
+  responses: [
+    { status: 200, type: ResponseCheckSecretDto },
+    { status: 404, type: NotFoundResponseDto },
+  ],
+};
+
 const deleteSecretPhrase = {
   operation: 'delete secret phrase from db',
   responses: [
@@ -42,6 +52,7 @@ const generateSecretPhrase = {
 export default {
   createSecretPhrase,
   getSecretPhraseByLink,
+  checkSecretPhraseByLink,
   deleteSecretPhrase,
   generateSecretPhrase,
 };

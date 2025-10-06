@@ -6,6 +6,7 @@ import { CreateSecretResponse } from './interfaces/response-create-secret.interf
 import { GetSecretResponse } from './interfaces/response-get-secret.interface';
 import { IdResponse } from './interfaces/id-response.interface';
 import { SecretEntry } from '../pg/interfaces/secret-entry.interface';
+import { ResponseCheckSecret } from './interfaces/check-response.interface';
 
 /**
  * Сервис модуля secret.module для обработки запросов по маршрутам для записи, удаления, получения секретных фраз,
@@ -155,7 +156,7 @@ export class SecretService {
    *
    *@param {string} link
    *@throws HttpException c кодом 500, если возникли неполадки во время удаления фразы
-   *@throws HttpException c кодом 400, если передана неккоректная ссылка и запись не была найдена
+   *@throws HttpException c кодом 400, если передана некорректная ссылка и запись не была найдена
    *@throws HttpException c кодом 403, если у записи поле allow_deletions=false, и ее нельзя удалить
    *@returns Promise<IdResponse> - объект полем id - это и уникальный идентификатор записи в бд, и также ссылка,
    *по которой эта запись была доступна.
@@ -187,5 +188,33 @@ export class SecretService {
       link,
       'id',
     );
+  }
+
+  /**
+   * Получает ссылку из параметров запроса в виде строки, и с помощью нее находит в базе данных запись с секретной фразой.
+   * Если запись существует, то возвращает объект, описанный ниже
+   *
+   *@param {string} link
+   *@throws HttpException c кодом 500, если возникли неполадки во время нахождения фразы
+   *@throws HttpException c кодом 404, если передана некорректная ссылка и запись не была найдена
+   *@returns Promise<ResponseCheckSecret> - объект c полем link - это и уникальный идентификатор записи в бд, и также ссылка,
+   *по которой эта запись была доступна. Поле 2 - exist - если true, то ссылка существует или существовала когда-либо.
+   * */
+  async checkSecretPhraseByLink(link: string): Promise<ResponseCheckSecret> {
+    const info = await this.pgService.find<SecretEntry>(
+      'secret_table',
+      '*',
+      'id',
+      link,
+    );
+
+    if (!info) {
+      throw new HttpException('this link is not found', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      link: link,
+      exist: true,
+    };
   }
 }
