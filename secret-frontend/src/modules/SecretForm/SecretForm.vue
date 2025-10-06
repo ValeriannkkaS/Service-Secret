@@ -7,6 +7,7 @@
         type="text"
         :placeholder="t('formNote.placeholder')"
       />
+      <ArealButton>click!</ArealButton>
       <MainButton class="submit-btn violet" type="submit" :disabled="!secretPhrase">{{
         t('buttons.pass')
       }}</MainButton>
@@ -75,6 +76,7 @@ const link = computed(() => store.state.link)
 const setSecretPhrase = async () => {
   const redirect = await store.dispatch('secretForm/setSecretPhrase')
   if (redirect) {
+    store.commit('secretPhraseResponse/setPasswordIsLive', true)
     router.push(`/show/${link.value}`)
   }
 }

@@ -7,31 +7,35 @@
       t('buttons.tryAgain')
     }}</MainButton>
   </HelpOptionsContainer>
-  <div class="response-container">
-    <p v-if="passwordInfo">{{ t('yourPassword.message') }}</p>
-    <div class="secret-phrase-container" v-if="passwordInfo">
+  <div v-if="!notFound" class="response-container">
+    <p v-if="passwordIsLive">{{ t('yourPassword.message') }}</p>
+    <div class="secret-phrase-container" v-if="passwordIsLive">
       <div v-if="secretPhrase && show">
         <p>{{ secretPhrase }}</p>
       </div>
-      <div v-if="secretPhrase && !show">
-        <p>{{ unseenSecretPhrase }}</p>
+      <div v-if="!show">
+        <p>********</p>
       </div>
     </div>
     <MainButton
-      v-if="!show && secretPhrase && passwordInfo"
+      v-if="!show && passwordIsLive"
       class="show-copy-btn orange"
       :on-click="showPassword"
       >{{ t('buttons.show') }}</MainButton
     >
     <MainButton
-      v-if="show && secretPhrase && passwordInfo"
+      v-if="show && secretPhrase && passwordIsLive"
       class="show-copy-btn violet"
       :on-click="copyPassword"
       >{{ t('buttons.copy') }}</MainButton
     >
-    <div v-if="!passwordInfo" class="secret-phrase-container">
+    <div v-if="!passwordIsLive" class="secret-phrase-container">
       <p>{{ t('password.tryAgain') }}</p>
     </div>
+  </div>
+  <div v-if="notFound" class="response-container">
+    <h1>404</h1>
+    <p>Страница не найдена</p>
   </div>
   <Modal :copied="copied" :deleted="''">{{ t('modal.passwordCopied') }}</Modal>
   <Modal :deleted="deleted" :copied="''">{{ t('modal.passwordDeleted') }}</Modal>
@@ -53,16 +57,19 @@ const { t } = useI18n()
 const copied = ref('')
 const deleted = ref('')
 const secretPhrase = computed(() => store.state.secretPhraseResponse.secretPhrase)
-const unseenSecretPhrase = computed(() => '*'.repeat(secretPhrase.value.length))
 const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.link]?.allowDeletions)
 const show = computed(() => store.state.secretPhraseResponse.show)
-const passwordInfo = computed(() => store.state.passwordInfo?.[route.params.link])
+const notFound = computed(() => store.state.secretPhraseResponse.notFound)
+const passwordIsLive = computed(() => store.state.secretPhraseResponse.passwordIsLive)
 
-const getSecretPhrase = async () =>
-  store.dispatch('secretPhraseResponse/getSecretPhraseByLink', route.params.link)
+const checkSecretPhrase = async () =>
+  store.dispatch('secretPhraseResponse/checkSecretPhrase', route.params.link)
 
 const returnBack = () => router.push('/')
-const showPassword = () => store.commit('secretPhraseResponse/setShow', true)
+const showPassword = async () => {
+  await store.dispatch('secretPhraseResponse/getSecretPhraseByLink', route.params.link)
+  store.commit('secretPhraseResponse/setShow', true)
+}
 const copyPassword = () => {
   navigator.clipboard.writeText(secretPhrase.value)
   copied.value = 'active'
@@ -78,7 +85,7 @@ const deleteSecretPhrase = async () => {
   }, 1000)
 }
 
-watch(() => route.params.link, getSecretPhrase, { immediate: true })
+watch(() => route.params.link, checkSecretPhrase, { immediate: true })
 </script>
 
 <style scoped>

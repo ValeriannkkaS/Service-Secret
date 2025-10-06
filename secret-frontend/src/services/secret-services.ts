@@ -20,6 +20,14 @@ export default class SecretServices {
     }
   }
 
+  static async checkSecretPhrase(link: string): Promise<SecretDto> {
+    try {
+      return await fetchApi.get<SecretDto>(`${this.apiUrl}/check/${link}`)
+    } catch (error) {
+      throw error
+    }
+  }
+
   static async deleteSecretPhrase(link: string): Promise<SecretDto> {
     try {
       return await fetchApi.delete<SecretDto>(`${this.apiUrl}/${link}`)

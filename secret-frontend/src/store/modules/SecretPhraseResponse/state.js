@@ -1,6 +1,6 @@
 export default {
-  loading: false,
-  error: null,
   secretPhrase: null,
+  notFound: false,
+  passwordIsLive: true,
   show: false,
 }

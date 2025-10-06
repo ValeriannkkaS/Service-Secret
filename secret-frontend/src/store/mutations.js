@@ -6,9 +6,7 @@ export default {
     state.passwordInfo = { ...state.passwordInfo, [link]: passwordInfo }
   },
   deletePasswordInfo(state, link) {
-    const passwordInfo = { ...state.passwordInfo }
-    delete passwordInfo[link]
-    state.passwordInfo = {}
+    state.passwordInfo = { ...state.passwordInfo, [link]: null }
   },
   setError(state, error) {
     state.error = error
