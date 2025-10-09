@@ -3,6 +3,7 @@
     <div class="form-secret-phrase-container">
       <RouterView />
       <ArealButton
+        :primary="false"
         v-if="isRu"
         text="EN"
         size="L"
@@ -13,7 +14,7 @@
         :primary="true"
         size="L"
         v-if="!isRu"
-        text="RUS"
+        text="RU"
         @click="() => (locale = 'ru')"
         class="change-lang-btn"
       ></ArealButton>
@@ -27,8 +28,9 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="js">
 import MainButton from '@/components/buttons/MainButton.vue'
+import { ArealButton } from '@areal/components-vuetify2/src'
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 import Help from '@/components/inputs-helpers/Help.vue'
