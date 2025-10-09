@@ -2,12 +2,21 @@
   <div class="background">
     <div class="form-secret-phrase-container">
       <RouterView />
-      <MainButton v-if="isRu" :on-click="() => (locale = 'en')" class="orange change-lang-btn"
-        >EN</MainButton
-      >
-      <MainButton v-if="!isRu" :on-click="() => (locale = 'ru')" class="violet change-lang-btn"
-        >RU</MainButton
-      >
+      <ArealButton
+        v-if="isRu"
+        text="EN"
+        size="L"
+        @click="() => (locale = 'en')"
+        class="change-lang-btn"
+      ></ArealButton>
+      <ArealButton
+        :primary="true"
+        size="L"
+        v-if="!isRu"
+        text="RUS"
+        @click="() => (locale = 'ru')"
+        class="change-lang-btn"
+      ></ArealButton>
       <transition name="fade" mode="out-in">
         <Help v-if="loading" class="help loading">{{ t('help.loadingText') }}</Help>
       </transition>
@@ -62,7 +71,7 @@ const isRu = computed(() => locale.value === 'ru')
   top: 50px;
   right: 40px;
   height: 43px;
-  width: 150px;
+  width: 200px;
 }
 .fade-enter-active,
 .fade-leave-active {

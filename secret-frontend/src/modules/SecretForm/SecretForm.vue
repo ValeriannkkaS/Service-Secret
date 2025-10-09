@@ -7,7 +7,6 @@
         type="text"
         :placeholder="t('formNote.placeholder')"
       />
-      <ArealButton>click!</ArealButton>
       <MainButton class="submit-btn violet" type="submit" :disabled="!secretPhrase">{{
         t('buttons.pass')
       }}</MainButton>
@@ -33,9 +32,10 @@
   </form>
 </template>
 
-<script setup lang="ts">
+<script setup lang="js">
 import MainButton from '@/components/buttons/MainButton.vue'
 import Select from '@/components/inputs-helpers/Select.vue'
+
 import {
   optionsCountOfSymbols,
   optionsCountOfViews,
@@ -79,7 +79,8 @@ const setSecretPhrase = async () => {
   }
 }
 const generateSecret = async () => {
-  store.dispatch('secretForm/generateSecretPhrase')
+  const response = await store.dispatch('secretForm/generateSecretPhrase')
+  secretPhrase.value = response.secretPhrase
 }
 watch(secretPhrase, () => {
   store.commit('setSecretPhrase', secretPhrase.value)

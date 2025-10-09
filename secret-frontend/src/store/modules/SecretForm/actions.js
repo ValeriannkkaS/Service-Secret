@@ -49,7 +49,7 @@ export default {
     commit('setError', false, { root: true })
     try {
       const response = await SecretServices.generateSecretPhrase(state.countOfSymbols)
-      commit('setSecretPhrase', response.secretPhrase)
+      return response
     } catch (err) {
       commit('setError', true, { root: true })
       setTimeout(() => commit('setError', false, { root: true }), 3000)

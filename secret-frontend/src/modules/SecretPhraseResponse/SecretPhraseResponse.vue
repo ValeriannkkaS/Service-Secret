@@ -15,6 +15,7 @@
       </div>
       <div v-if="!show">
         <p>********</p>
+        <!--todo  поравить, чтобы после удаления фраза не показывалась, а также поправить удаление на сервере-->
       </div>
     </div>
     <MainButton
@@ -43,7 +44,7 @@
 
 <script setup lang="ts">
 import MainButton from '@/components/buttons/MainButton.vue'
-import router from '@/router/index.ts'
+import router from '@/router/index.js'
 import { useRoute } from 'vue-router'
 import { computed, ref, watch } from 'vue'
 import HelpOptionsContainer from '@/components/inputs-helpers/HelpOptionsContainer.vue'
