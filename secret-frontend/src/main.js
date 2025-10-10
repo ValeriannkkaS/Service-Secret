@@ -11,6 +11,7 @@ import ruApp from './langs/App/ru'
 import App from './App.vue'
 import router from './router/index.js'
 import store from './store/index.js'
+import { createAreal } from '@areal/components-vuetify2/src'
 
 const bootstrap = async () => {
   const i18n = createI18n({
@@ -31,8 +32,14 @@ const bootstrap = async () => {
       },
     },
   })
-  const app = createApp(App)
+  const areal = createAreal({
+    platformUiUrl: '/',
+    styleUrl: 'http://localhost:8080/style',
+    styleCode: 'default',
+  })
 
+  const app = createApp(App)
+  app.use(areal)
   app.use(store)
   app.use(i18n)
   app.use(router)

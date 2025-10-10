@@ -1,9 +1,11 @@
 <template>
-  <div class="background">
-    <div class="form-secret-phrase-container">
+  <div class="background d-flex justify-center align-center areal-bg--gray">
+    <div
+      class="d-flex flex-column justify-center align-center areal-bg--gray--lighten2 form-secret-phrase-container"
+    >
       <RouterView />
       <ArealButton
-        :primary="false"
+        :primary="true"
         v-if="isRu"
         text="EN"
         size="L"
@@ -18,22 +20,31 @@
         @click="() => (locale = 'ru')"
         class="change-lang-btn"
       ></ArealButton>
-      <transition name="fade" mode="out-in">
-        <Help v-if="loading" class="help loading">{{ t('help.loadingText') }}</Help>
-      </transition>
-      <transition name="fade" mode="out-in">
-        <Help v-if="error" class="help error">{{ t('help.errorText') }}</Help>
-      </transition>
+      <ArealNotificationPanel
+        :closable="true"
+        :show="error"
+        type="errorType"
+        icon
+        iconName="DangerCircle"
+        size="M"
+        class="help"
+        title="Error"
+        :text="t('help.errorText')"
+      />
+      <!-- todo про transition-->
+      <div v-show="loading">
+        <ArealLineLoader top="10px" />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="js">
-import MainButton from '@/components/buttons/MainButton.vue'
 import { ArealButton } from '@areal/components-vuetify2/src'
+import { ArealNotificationPanel } from '@areal/components-vuetify2/src'
+import { ArealLineLoader } from '@areal/components-vuetify2/src'
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
-import Help from '@/components/inputs-helpers/Help.vue'
 import { useStore } from 'vuex'
 
 const store = useStore()
@@ -48,65 +59,38 @@ const isRu = computed(() => locale.value === 'ru')
 
 <style scoped>
 .background {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
   height: 100%;
   background: #d6cccc;
 }
 .form-secret-phrase-container {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   padding: 50px 50px 35px;
   width: 1000px;
   height: 285px;
-  background: #ebebeb;
-  border-radius: 30px;
   box-shadow: 5px 5px 10px rgba(121, 121, 121, 0.63);
 }
 .change-lang-btn {
   position: fixed;
   top: 50px;
   right: 40px;
-  height: 43px;
-  width: 200px;
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
 }
 .help {
-  width: 100%;
-  height: 62px;
+  position: fixed;
+  top: 50px;
+  left: 40px;
 }
 @media (max-width: 1001px) {
   .form-secret-phrase-container {
     width: 100%;
     height: 100%;
-    border-radius: 0;
     padding: 0;
     min-width: 350px;
   }
   .help {
-    position: absolute;
-    bottom: 0;
-    transform: translateY(-350%);
-    width: 90%;
-    margin-left: 50px;
+    top: auto;
+    left: auto;
+    bottom: 50px;
   }
 }
 </style>
