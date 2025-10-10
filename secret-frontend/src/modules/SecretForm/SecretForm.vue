@@ -1,46 +1,84 @@
 <template>
-  <form class="form-container" @submit.prevent="setSecretPhrase">
-    <div class="left-form-part">
-      <input
-        class="input"
-        v-model="secretPhrase"
-        type="text"
-        :placeholder="t('formNote.placeholder')"
+  <form class="d-flex align-start form-container" @submit.prevent="setSecretPhrase">
+    <div class="d-flex flex-column justify-start align-center ga-10 left-form-part">
+      <ArealInput
+        :value="secretPhrase"
+        @input="(e) => (secretPhrase = e)"
+        :label="t('formNote.label')"
+        :required="true"
+        size="L"
+        style="width: 90%"
       />
-      <MainButton class="submit-btn violet" type="submit" :disabled="!secretPhrase">{{
-        t('buttons.pass')
-      }}</MainButton>
+      <ArealButton
+        type="submit"
+        size="L"
+        width="90%"
+        :text="t('buttons.pass')"
+        :disabled="!secretPhrase"
+        :loading="loading"
+      />
     </div>
-    <div class="divider"></div>
-    <div class="right-form-part">
-      <div class="right-form-part-options-container">
-        <MainButton class="generate-btn violet" :on-click="generateSecret" type="button">{{
-          t('buttons.generate')
-        }}</MainButton>
-        <Select class="select" v-model="countOfSymbols" :options="optionsCountOfSymbols"></Select>
+    <ArealDivider class="divider" :vertical="true" />
+    <div class="d-flex flex-column justify-start align-center ga-6 right-form-part">
+      <div class="d-flex ga-4 right-form-part-options-container">
+        <ArealButton
+          type="button"
+          size="XS"
+          width="50%"
+          :text="t('buttons.generate')"
+          @click="generateSecret"
+        />
+        <ArealDropbox
+          :items="itemsCountOfSymbols"
+          :value="countOfSymbols"
+          text-param="label"
+          value-param="value"
+          size="XS"
+          style="width: 50%"
+          :label="t('dropboxText.labelCountOfSymbols')"
+          :clearButton="false"
+          @input="(e) => (countOfSymbols = e)"
+        />
       </div>
+
       <p>{{ t('formNote.deleteAfter') }}</p>
-      <div class="right-form-part-options-container">
-        <Select class="select" v-model="expiresIn" :options="optionsExpiresIn"></Select>
-        <Select class="select" v-model="countOfViews" :options="optionsCountOfViews"></Select>
+      <div class="d-flex ga-4 right-form-part-options-container">
+        <ArealDropbox
+          :items="itemsCountOfDays"
+          :value="expiresIn"
+          text-param="label"
+          value-param="value"
+          size="XS"
+          style="width: 50%"
+          :label="t('dropboxText.labelCountOfDays')"
+          :clearButton="false"
+          @input="(e) => (expiresIn = e)"
+        />
+        <ArealDropbox
+          :items="itemsCountOfViews"
+          :value="countOfViews"
+          text-param="label"
+          value-param="value"
+          size="XS"
+          style="width: 50%"
+          :label="t('dropboxText.labelCountOfViews')"
+          :clearButton="false"
+          @input="(e) => (countOfViews = e)"
+        />
       </div>
-      <div class="right-form-part-options-container">
-        <input type="checkbox" id="checkbox" class="checkbox" v-model="allowDeletions" />
-        <label for="checkbox">{{ t('formNote.allowDeletions') }}</label>
+      <div class="d-flex ga-4 right-form-part-options-container">
+        <ArealCheckbox
+          id-checkbox="1"
+          :label="t('formNote.allowDeletions')"
+          :value="allowDeletions"
+          @input="(e) => (allowDeletions = e)"
+        />
       </div>
     </div>
   </form>
 </template>
 
 <script setup lang="js">
-import MainButton from '@/components/buttons/MainButton.vue'
-import Select from '@/components/inputs-helpers/Select.vue'
-
-import {
-  optionsCountOfSymbols,
-  optionsCountOfViews,
-  optionsExpiresIn,
-} from '@/constants&interfaces/optionsForSelect.ts'
 import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
@@ -53,6 +91,22 @@ const { t } = useI18n()
 
 const secretPhrase = ref(null)
 
+const itemsCountOfSymbols = computed(() => [
+  { label: `8 ${t('dropboxText.symbols')}`, value: 8 },
+  { label: `12 ${t('dropboxText.symbols')}`, value: 12 },
+  { label: `15 ${t('dropboxText.symbols')}`, value: 15 },
+])
+const itemsCountOfDays = computed(() => [
+  { label: `1 ${t('dropboxText.day')}`, value: 86400000 },
+  { label: `3 ${t('dropboxText.days1')}`, value: 259200000 },
+  { label: `5 ${t('dropboxText.days2')}`, value: 432000000 },
+  { label: `10 ${t('dropboxText.days2')}`, value: 864000000 },
+])
+const itemsCountOfViews = computed(() => [
+  { label: `1 ${t('dropboxText.view')}`, value: 1 },
+  { label: `3 ${t('dropboxText.views1')}`, value: 3 },
+  { label: `5 ${t('dropboxText.views2')}`, value: 5 },
+])
 const countOfSymbols = computed({
   get: () => store.state.secretForm.countOfSymbols,
   set: (value) => store.commit('secretForm/setCountOfSymbols', value),
@@ -70,6 +124,7 @@ const allowDeletions = computed({
   set: (value) => store.commit('secretForm/setAllowDeletions', value),
 })
 const link = computed(() => store.state.link)
+const loading = computed(() => store.state.loading)
 
 const setSecretPhrase = async () => {
   const redirect = await store.dispatch('secretForm/setSecretPhrase')
@@ -83,7 +138,7 @@ const generateSecret = async () => {
   secretPhrase.value = response.secretPhrase
 }
 watch(secretPhrase, () => {
-  store.commit('setSecretPhrase', secretPhrase.value)
+  store.commit('secretForm/setSecretPhrase', secretPhrase.value)
 })
 </script>
 
@@ -92,61 +147,16 @@ watch(secretPhrase, () => {
 .form-container {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: start;
   min-width: 350px;
 }
 .left-form-part,
 .right-form-part {
   height: 100%;
   width: 100%;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  gap: 1.5rem;
 }
+/*todo проверить и оптимизировать стили*/
 .right-form-part-options-container {
   width: 90%;
-  display: flex;
-  gap: 1rem;
-}
-
-/*элементы формы*/
-.submit-btn {
-  height: 60px;
-}
-.input {
-  padding: 0 16px;
-  width: 90%;
-  height: 62px;
-  font-size: 20px;
-  border-radius: 0.7rem;
-  border: 1px solid rgba(173, 173, 173, 0.56);
-  &:hover {
-    border: 1px solid rgba(171, 104, 234, 0.56);
-  }
-}
-.generate-btn,
-.select {
-  width: 50%;
-  height: 35px;
-}
-.submit-btn,
-.input {
-  width: 90%;
-}
-.checkbox {
-  accent-color: #9647ef;
-  width: 22px;
-  aspect-ratio: 1/1;
-}
-.divider {
-  width: 3px;
-  border-radius: 1px;
-  height: 95%;
-  background-color: rgba(173, 173, 173, 0.56);
 }
 @media (max-width: 1001px) {
   .form-container {

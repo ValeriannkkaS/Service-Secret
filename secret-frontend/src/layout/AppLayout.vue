@@ -1,41 +1,44 @@
 <template>
-  <div class="background d-flex justify-center align-center areal-bg--gray">
-    <div
-      class="d-flex flex-column justify-center align-center areal-bg--gray--lighten2 form-secret-phrase-container"
-    >
-      <RouterView />
-      <ArealButton
-        :primary="true"
-        v-if="isRu"
-        text="EN"
-        size="L"
-        @click="() => (locale = 'en')"
-        class="change-lang-btn"
-      ></ArealButton>
-      <ArealButton
-        :primary="true"
-        size="L"
-        v-if="!isRu"
-        text="RU"
-        @click="() => (locale = 'ru')"
-        class="change-lang-btn"
-      ></ArealButton>
-      <ArealNotificationPanel
-        :closable="true"
-        type="errorType"
-        icon
-        iconName="DangerCircle"
-        size="M"
-        class="help"
-        :title="t('help.errorTitle')"
-        :text="t('help.errorText')"
-      />
-      <!-- todo про transition-->
-      <div v-show="loading">
-        <ArealLineLoader top="10px" />
+  <ArealApp>
+    <div class="background d-flex justify-center align-center areal-bg--gray">
+      <div
+        class="d-flex flex-column justify-center align-center areal-bg--gray--lighten2 form-secret-phrase-container"
+      >
+        <RouterView />
+        <ArealButton
+          v-if="isRu"
+          text="EN"
+          size="M"
+          :primary="false"
+          @click="() => (locale = 'en')"
+          class="change-lang-btn"
+        ></ArealButton>
+        <ArealButton
+          v-if="!isRu"
+          text="RU"
+          size="M"
+          :primary="false"
+          @click="() => (locale = 'ru')"
+          class="change-lang-btn"
+        ></ArealButton>
+        <ArealNotificationPanel
+          :closable="true"
+          :show="error"
+          type="errorType"
+          icon
+          iconName="DangerCircle"
+          size="M"
+          class="help"
+          :title="t('help.errorTitle')"
+          :text="t('help.errorText')"
+        />
+        <!-- todo про transition-->
+        <div v-show="loading">
+          <ArealLineLoader top="10px" />
+        </div>
       </div>
     </div>
-  </div>
+  </ArealApp>
 </template>
 
 <script setup lang="js">
