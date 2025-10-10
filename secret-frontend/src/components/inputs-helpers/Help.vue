@@ -2,6 +2,7 @@
   <div class="help">
     <p><slot></slot></p>
   </div>
+  <!--todo В КОНЦЕ : проверить все компоненты которые больше не используются, и удалить их-->
 </template>
 
 <script setup lang="ts"></script>

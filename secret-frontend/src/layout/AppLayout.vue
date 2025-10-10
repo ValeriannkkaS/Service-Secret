@@ -22,13 +22,12 @@
       ></ArealButton>
       <ArealNotificationPanel
         :closable="true"
-        :show="error"
         type="errorType"
         icon
         iconName="DangerCircle"
         size="M"
         class="help"
-        title="Error"
+        :title="t('help.errorTitle')"
         :text="t('help.errorText')"
       />
       <!-- todo про transition-->
@@ -40,9 +39,6 @@
 </template>
 
 <script setup lang="js">
-import { ArealButton } from '@areal/components-vuetify2/src'
-import { ArealNotificationPanel } from '@areal/components-vuetify2/src'
-import { ArealLineLoader } from '@areal/components-vuetify2/src'
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 import { useStore } from 'vuex'

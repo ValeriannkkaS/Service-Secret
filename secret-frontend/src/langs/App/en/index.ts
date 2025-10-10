@@ -24,6 +24,7 @@ export default {
   },
   help: {
     loadingText: 'Loading... Please wait...',
+    errorTitle: 'Unforeseen error!',
     errorText: 'Something went wrong, please try again later',
   },
 }
