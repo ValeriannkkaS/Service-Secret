@@ -1,21 +1,5 @@
 <template>
-  <HelpOptionsContainer>
-    <ArealButton
-      :primary="false"
-      size="XS"
-      :text="t('buttons.delete')"
-      v-if="allowDeletions"
-      @click="deleteSecretPhrase"
-      :icon-left="{ iconName: 'DeleteIcon' }"
-    />
-    <ArealButton
-      :primary="false"
-      size="XS"
-      :text="t('buttons.tryAgain')"
-      @click="returnBack"
-      :icon-left="{ iconName: 'TriangleLeftIcon' }"
-    />
-  </HelpOptionsContainer>
+  <HelpOptionsContainer />
   <div class="d-flex flex-column align-start justify-space-around main-container">
     <p class="note" v-if="passwordInfo">{{ t('password.available') }}</p>
     <div class="d-flex flex-column align-center justify-space-between show-copy-link-container">
@@ -40,30 +24,19 @@
     size="L"
     class="snackbar"
   />
-  <ArealSnackbar
-    v-show="deleted"
-    icon
-    iconName="CheckCircle"
-    type="success"
-    :text="t('modal.passwordDeleted')"
-    size="L"
-    class="snackbar"
-  />
 </template>
 
 <script setup lang="js">
 import HelpOptionsContainer from '@/components/inputs-helpers/HelpOptionsContainer.vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { computed, ref } from 'vue'
 
 const { t } = useI18n()
 const route = useRoute()
-const router = useRouter()
 const store = useStore()
 const copied = ref(false)
-const deleted = ref(false)
 
 const link = route.params.link
 const passwordInfo = computed(() => store.state.passwordInfo?.[link] || null)
@@ -74,13 +47,6 @@ const fullLink = computed(() =>
   passwordInfo.value ? `http://${domain}/${passwordInfo?.value?.link}` : null,
 )
 
-const deleteSecretPhrase = () => {
-  store.dispatch('secretForm/deleteSecretPhrase', link)
-  deleted.value = true
-  setTimeout(() => {
-    deleted.value = false
-  }, 3000)
-}
 const copyLink = () => {
   navigator.clipboard.writeText(fullLink.value || '')
   copied.value = true
@@ -88,7 +54,6 @@ const copyLink = () => {
     copied.value = false
   }, 3000)
 }
-const returnBack = () => router.push('/')
 </script>
 
 <style scoped>

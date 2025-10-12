@@ -1,21 +1,5 @@
 <template>
-  <HelpOptionsContainer>
-    <ArealButton
-      :primary="false"
-      size="XS"
-      :text="t('buttons.delete')"
-      v-if="allowDeletions"
-      @click="deleteSecretPhrase"
-      :icon-left="{ iconName: 'DeleteIcon' }"
-    />
-    <ArealButton
-      :primary="false"
-      size="XS"
-      :text="t('buttons.tryAgain')"
-      @click="returnBack"
-      :icon-left="{ iconName: 'TriangleLeftIcon' }"
-    />
-  </HelpOptionsContainer>
+  <HelpOptionsContainer />
   <div v-if="!notFound" class="d-flex flex-column align-start response-container">
     <p v-if="passwordIsLive">{{ t('yourPassword.message') }}</p>
     <div class="d-flex align-center justify-start secret-phrase-container">
@@ -54,19 +38,9 @@
     size="L"
     class="snackbar"
   />
-  <ArealSnackbar
-    v-show="deleted"
-    icon
-    iconName="CheckCircle"
-    type="success"
-    :text="t('modal.passwordDeleted')"
-    size="L"
-    class="snackbar"
-  />
 </template>
 
 <script setup lang="js">
-import router from '@/router/index.js'
 import { useRoute } from 'vue-router'
 import { computed, ref, watch } from 'vue'
 import HelpOptionsContainer from '@/components/inputs-helpers/HelpOptionsContainer.vue'
@@ -77,7 +51,6 @@ const route = useRoute()
 const store = useStore()
 const { t } = useI18n()
 const copied = ref(false)
-const deleted = ref(false)
 const secretPhrase = computed(() => store.state.secretPhraseResponse.secretPhrase)
 const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.link]?.allowDeletions)
 const show = computed(() => store.state.secretPhraseResponse.show)
@@ -87,7 +60,6 @@ const passwordIsLive = computed(() => store.state.secretPhraseResponse.passwordI
 const checkSecretPhrase = async () =>
   store.dispatch('secretPhraseResponse/checkSecretPhrase', route.params.link)
 
-const returnBack = () => router.push('/')
 const showPassword = async () => {
   await store.dispatch('secretPhraseResponse/getSecretPhraseByLink', route.params.link)
   store.commit('secretPhraseResponse/setShow', true)
@@ -97,13 +69,6 @@ const copyPassword = () => {
   copied.value = true
   setTimeout(() => {
     copied.value = false
-  }, 3000)
-}
-const deleteSecretPhrase = async () => {
-  await store.dispatch('secretForm/deleteSecretPhrase', route.params.link)
-  deleted.value = true
-  setTimeout(() => {
-    deleted.value = false
   }, 3000)
 } //todo оптимизация при размонтировании
 

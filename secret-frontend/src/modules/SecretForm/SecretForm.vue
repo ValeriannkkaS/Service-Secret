@@ -143,14 +143,12 @@ watch(secretPhrase, () => {
 </script>
 
 <style scoped>
-/*контейнеры формы (общий контейнер формы и контейнеры элементов)*/
 .form-container {
-  width: 100%;
-  height: 100%;
   min-width: 350px;
 }
 .left-form-part,
-.right-form-part {
+.right-form-part,
+.form-container {
   height: 100%;
   width: 100%;
 }
@@ -162,7 +160,6 @@ watch(secretPhrase, () => {
   .form-container {
     flex-direction: column;
     justify-content: center;
-    width: 100%;
     gap: 1.5rem;
   }
   .divider {
