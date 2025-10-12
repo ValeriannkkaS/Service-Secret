@@ -7,7 +7,10 @@
     <p v-if="lastView && passwordIsLive && passwordInfo" class="error">
       {{ t('options.lastView') }}
     </p>
-    <p v-if="!passwordIsLive && !passwordInfo" class="error">{{ t('options.nonePassword') }}</p>
+    <p v-if="!passwordIsLive && !passwordInfo && !notFound" class="error">
+      {{ t('options.alreadyExpiredOrDeleted') }}
+    </p>
+    <p v-if="notFound" class="error">{{ t('options.nonePassword') }}</p>
     <div class="options-buttons-container1">
       <slot></slot>
     </div>
@@ -30,6 +33,7 @@ const expiresAt = computed(() => passwordInfo?.value?.expiresAt)
 const date = computed(() => new Date(expiresAt?.value).toLocaleDateString())
 const lastView = computed(() => passwordInfo?.value?.remainingViewsCount === 0)
 const passwordIsLive = computed(() => store.state.secretPhraseResponse?.passwordIsLive)
+const notFound = computed(() => store.state.secretPhraseResponse.notFound)
 </script>
 
 <style scoped>

@@ -22,7 +22,13 @@
       <div class="d-flex align-center justify-start link-container">
         <p class="link">{{ passwordInfo ? fullLink : t('password.tryAgain') }}</p>
       </div>
-      <ArealButton size="L" :text="t('buttons.copy')" width="100%" @click="copyLink" />
+      <ArealButton
+        v-if="fullLink"
+        size="L"
+        :text="t('buttons.copy')"
+        width="100%"
+        @click="copyLink"
+      />
     </div>
   </div>
   <ArealSnackbar
@@ -45,14 +51,12 @@
   />
 </template>
 
-<script setup lang="ts">
+<script setup lang="js">
 import HelpOptionsContainer from '@/components/inputs-helpers/HelpOptionsContainer.vue'
-import MainButton from '@/components/buttons/MainButton.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { computed, ref } from 'vue'
-import Modal from '@/components/inputs-helpers/Modal.vue'
 
 const { t } = useI18n()
 const route = useRoute()

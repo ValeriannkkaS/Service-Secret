@@ -37,6 +37,8 @@ export default {
       const response = await SecretServices.deleteSecretPhrase(link)
       commit('setLink', null, { root: true })
       commit('deletePasswordInfo', response.id, { root: true })
+      commit('secretPhraseResponse/setPasswordIsLive', false, { root: true })
+      commit('secretPhraseResponse/setSecretPhrase', null, { root: true })
     } catch (err) {
       commit('setError', true, { root: true })
       setTimeout(() => commit('setError', false, { root: true }), 3000)

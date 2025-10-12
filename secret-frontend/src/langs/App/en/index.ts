@@ -18,6 +18,7 @@ export default {
   options: {
     lastView: 'This is the last view of this passord. Password will be deleted after this view',
     nonePassword: 'There is no password for this link, please, try pass again',
+    alreadyExpiredOrDeleted: 'This password was already deleted or expired.',
     passwordExpired: 'Your password will expire on',
     orAfter: 'or after',
     views: 'view(s)',

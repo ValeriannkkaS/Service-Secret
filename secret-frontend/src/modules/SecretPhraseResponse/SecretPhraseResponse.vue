@@ -1,62 +1,83 @@
 <template>
   <HelpOptionsContainer>
-    <MainButton v-if="allowDeletions" class="orange option-btn" :on-click="deleteSecretPhrase">{{
-      t('buttons.delete')
-    }}</MainButton>
-    <MainButton :on-click="returnBack" class="violet option-btn">{{
-      t('buttons.tryAgain')
-    }}</MainButton>
+    <ArealButton
+      :primary="false"
+      size="XS"
+      :text="t('buttons.delete')"
+      v-if="allowDeletions"
+      @click="deleteSecretPhrase"
+      :icon-left="{ iconName: 'DeleteIcon' }"
+    />
+    <ArealButton
+      :primary="false"
+      size="XS"
+      :text="t('buttons.tryAgain')"
+      @click="returnBack"
+      :icon-left="{ iconName: 'TriangleLeftIcon' }"
+    />
   </HelpOptionsContainer>
-  <div v-if="!notFound" class="response-container">
+  <div v-if="!notFound" class="d-flex flex-column align-start response-container">
     <p v-if="passwordIsLive">{{ t('yourPassword.message') }}</p>
-    <div class="secret-phrase-container" v-if="passwordIsLive">
-      <div v-if="secretPhrase && show">
+    <div class="d-flex align-center justify-start secret-phrase-container">
+      <div v-if="secretPhrase && show && passwordIsLive">
         <p>{{ secretPhrase }}</p>
       </div>
-      <div v-if="!show">
+      <div v-if="!show && passwordIsLive">
         <p>********</p>
-        <!--todo  поравить, чтобы после удаления фраза не показывалась, а также поправить удаление на сервере-->
+      </div>
+      <div v-if="!passwordIsLive">
+        <p>{{ t('password.tryAgain') }}</p>
       </div>
     </div>
-    <MainButton
+    <ArealButton
       v-if="!show && passwordIsLive"
-      class="show-copy-btn orange"
-      :on-click="showPassword"
-      >{{ t('buttons.show') }}</MainButton
-    >
-    <MainButton
+      size="L"
+      width="100%"
+      :text="t('buttons.show')"
+      @click="showPassword"
+    />
+    <ArealButton
       v-if="show && secretPhrase && passwordIsLive"
-      class="show-copy-btn violet"
-      :on-click="copyPassword"
-      >{{ t('buttons.copy') }}</MainButton
-    >
-    <div v-if="!passwordIsLive" class="secret-phrase-container">
-      <p>{{ t('password.tryAgain') }}</p>
-    </div>
+      size="L"
+      width="100%"
+      :text="t('buttons.copy')"
+      @click="copyPassword"
+    />
   </div>
-  <div v-if="notFound" class="response-container">
-    <h1>404</h1>
-    <p>Страница не найдена</p>
-  </div>
-  <Modal :copied="copied" :deleted="''">{{ t('modal.passwordCopied') }}</Modal>
-  <Modal :deleted="deleted" :copied="''">{{ t('modal.passwordDeleted') }}</Modal>
+  <ArealNotFound v-if="notFound" />
+  <ArealSnackbar
+    v-show="copied"
+    icon
+    iconName="Copy"
+    type="success"
+    :text="t('modal.passwordCopied')"
+    size="L"
+    class="snackbar"
+  />
+  <ArealSnackbar
+    v-show="deleted"
+    icon
+    iconName="CheckCircle"
+    type="success"
+    :text="t('modal.passwordDeleted')"
+    size="L"
+    class="snackbar"
+  />
 </template>
 
-<script setup lang="ts">
-import MainButton from '@/components/buttons/MainButton.vue'
+<script setup lang="js">
 import router from '@/router/index.js'
 import { useRoute } from 'vue-router'
 import { computed, ref, watch } from 'vue'
 import HelpOptionsContainer from '@/components/inputs-helpers/HelpOptionsContainer.vue'
 import { useStore } from 'vuex'
-import Modal from '@/components/inputs-helpers/Modal.vue'
 import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
 const store = useStore()
 const { t } = useI18n()
-const copied = ref('')
-const deleted = ref('')
+const copied = ref(false)
+const deleted = ref(false)
 const secretPhrase = computed(() => store.state.secretPhraseResponse.secretPhrase)
 const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.link]?.allowDeletions)
 const show = computed(() => store.state.secretPhraseResponse.show)
@@ -73,56 +94,56 @@ const showPassword = async () => {
 }
 const copyPassword = () => {
   navigator.clipboard.writeText(secretPhrase.value)
-  copied.value = 'active'
+  copied.value = true
   setTimeout(() => {
-    copied.value = ''
-  }, 1000)
+    copied.value = false
+  }, 3000)
 }
 const deleteSecretPhrase = async () => {
   await store.dispatch('secretForm/deleteSecretPhrase', route.params.link)
-  deleted.value = 'deleted'
+  deleted.value = true
   setTimeout(() => {
-    deleted.value = ''
-  }, 1000)
-}
+    deleted.value = false
+  }, 3000)
+} //todo оптимизация при размонтировании
 
 watch(() => route.params.link, checkSecretPhrase, { immediate: true })
 </script>
 
 <style scoped>
 .response-container {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
   gap: 17px;
   width: 100%;
 }
 .secret-phrase-container p {
+  font-size: 20px;
   white-space: nowrap;
 }
 .secret-phrase-container {
   width: 100%;
   height: 62px;
-  display: flex;
-  align-items: center;
   overflow-x: auto;
-  justify-content: start;
   padding: 0 16px;
-  background: rgba(215, 191, 243, 0.7);
-  border: solid 2px #9d4df3;
-  border-radius: 0.7rem;
+  background: #fff;
+  border: solid 2px #0082c5;
   box-shadow:
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-.error {
-  color: red;
-}
-.show-copy-btn {
-  width: 100%;
-  height: 60px;
+.snackbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1000px;
+  transform: translateY(-200%);
 }
 @media (max-width: 1001px) {
+  .snackbar {
+    position: fixed;
+    top: 0;
+    left: 20px;
+    transform: translateY(350%);
+  }
   .secret-phrase-container {
     overflow: auto;
   }
