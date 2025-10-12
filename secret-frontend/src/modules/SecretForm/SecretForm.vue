@@ -37,6 +37,7 @@
           style="width: 50%"
           :label="t('dropboxText.labelCountOfSymbols')"
           :clearButton="false"
+          :no-search="true"
           @input="(e) => (countOfSymbols = e)"
         />
       </div>
@@ -52,6 +53,7 @@
           style="width: 50%"
           :label="t('dropboxText.labelCountOfDays')"
           :clearButton="false"
+          :no-search="true"
           @input="(e) => (expiresIn = e)"
         />
         <ArealDropbox
@@ -63,6 +65,7 @@
           style="width: 50%"
           :label="t('dropboxText.labelCountOfViews')"
           :clearButton="false"
+          :no-search="true"
           @input="(e) => (countOfViews = e)"
         />
       </div>
@@ -152,7 +155,6 @@ watch(secretPhrase, () => {
   height: 100%;
   width: 100%;
 }
-/*todo проверить и оптимизировать стили*/
 .right-form-part-options-container {
   width: 90%;
 }

@@ -31,29 +31,32 @@ import HelpOptionsContainer from '@/components/inputs-helpers/HelpOptionsContain
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 
 const { t } = useI18n()
 const route = useRoute()
 const store = useStore()
 const copied = ref(false)
+const timeoutId = ref(null)
 
 const link = route.params.link
 const passwordInfo = computed(() => store.state.passwordInfo?.[link] || null)
-const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.link]?.allowDeletions)
 
 const domain = window.location.host
 const fullLink = computed(() =>
-  passwordInfo.value ? `http://${domain}/${passwordInfo?.value?.link}` : null,
+  passwordInfo.value ? `http://${domain}/${passwordInfo.value.link}` : null,
 )
 
 const copyLink = () => {
   navigator.clipboard.writeText(fullLink.value || '')
   copied.value = true
-  setTimeout(() => {
+  clearTimeout(timeoutId.value)
+  timeoutId.value = setTimeout(() => {
     copied.value = false
   }, 3000)
 }
+
+onBeforeUnmount(() => clearTimeout(timeoutId.value))
 </script>
 
 <style scoped>

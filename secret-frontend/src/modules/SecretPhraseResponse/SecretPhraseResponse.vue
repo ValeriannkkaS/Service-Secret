@@ -42,7 +42,7 @@
 
 <script setup lang="js">
 import { useRoute } from 'vue-router'
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import HelpOptionsContainer from '@/components/inputs-helpers/HelpOptionsContainer.vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
@@ -51,6 +51,7 @@ const route = useRoute()
 const store = useStore()
 const { t } = useI18n()
 const copied = ref(false)
+const timeoutId = ref(null)
 const secretPhrase = computed(() => store.state.secretPhraseResponse.secretPhrase)
 const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.link]?.allowDeletions)
 const show = computed(() => store.state.secretPhraseResponse.show)
@@ -67,12 +68,15 @@ const showPassword = async () => {
 const copyPassword = () => {
   navigator.clipboard.writeText(secretPhrase.value)
   copied.value = true
-  setTimeout(() => {
+  clearTimeout(timeoutId.value)
+  timeoutId.value = setTimeout(() => {
     copied.value = false
   }, 3000)
-} //todo оптимизация при размонтировании
+}
 
 watch(() => route.params.link, checkSecretPhrase, { immediate: true })
+
+onBeforeUnmount(() => clearTimeout(timeoutId.value))
 </script>
 
 <style scoped>

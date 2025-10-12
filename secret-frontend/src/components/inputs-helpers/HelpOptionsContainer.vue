@@ -42,7 +42,7 @@
 
 <script setup lang="js">
 import { useStore } from 'vuex'
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -52,6 +52,7 @@ const router = useRouter()
 const store = useStore()
 const { t } = useI18n()
 const deleted = ref(false)
+const timeoutId = ref(null)
 
 const link = route.params.link
 const passwordInfo = computed(() => store.state?.passwordInfo?.[link])
@@ -65,10 +66,13 @@ const notFound = computed(() => store.state.secretPhraseResponse.notFound)
 const deleteSecretPhrase = async () => {
   await store.dispatch('secretForm/deleteSecretPhrase', route.params.link)
   deleted.value = true
-  setTimeout(() => {
+  clearTimeout(timeoutId.value)
+  timeoutId.value = setTimeout(() => {
     deleted.value = false
   }, 3000)
 }
+
+onBeforeUnmount(() => clearTimeout(timeoutId.value))
 </script>
 
 <style scoped>
