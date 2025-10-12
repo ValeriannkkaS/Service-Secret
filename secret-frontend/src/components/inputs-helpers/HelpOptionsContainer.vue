@@ -1,5 +1,5 @@
 <template>
-  <div class="help-options-container1">
+  <div class="areal-bg--gray--lighten1 d-flex justify-space-between help-options-container">
     <p v-if="passwordInfo && !lastView" class="help">
       {{ t('options.passwordExpired') }} {{ date }} {{ t('options.orAfter') }}
       {{ passwordInfo.remainingViewsCount }} {{ t('options.views') }}
@@ -33,15 +33,11 @@ const passwordIsLive = computed(() => store.state.secretPhraseResponse?.password
 </script>
 
 <style scoped>
-.help-options-container1 {
-  display: flex;
-  justify-content: space-between;
+.help-options-container {
   align-items: center;
   position: absolute;
   top: 0;
   padding: 10px 50px;
-  background: #a3b0c6;
-  border-radius: 30px 30px 0 0;
   width: 100%;
 }
 .options-buttons-container1 {
@@ -52,13 +48,12 @@ const passwordIsLive = computed(() => store.state.secretPhraseResponse?.password
   color: #ca0101;
 }
 @media (max-width: 1001px) {
-  .help-options-container1 {
+  .help-options-container {
     flex-direction: column;
     align-items: start;
 
     justify-content: center;
     gap: 16px;
-    border-radius: 0;
     position: static;
     top: 0;
   }

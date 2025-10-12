@@ -1,30 +1,48 @@
 <template>
   <HelpOptionsContainer>
-    <MainButton v-if="allowDeletions" class="orange option-btn" :on-click="deleteSecretPhrase">{{
-      t('buttons.delete')
-    }}</MainButton>
-    <MainButton class="violet option-btn" :on-click="returnBack">{{
-      t('buttons.tryAgain')
-    }}</MainButton>
+    <ArealButton
+      :primary="false"
+      size="XS"
+      :text="t('buttons.delete')"
+      v-if="allowDeletions"
+      @click="deleteSecretPhrase"
+      :icon-left="{ iconName: 'DeleteIcon' }"
+    />
+    <ArealButton
+      :primary="false"
+      size="XS"
+      :text="t('buttons.tryAgain')"
+      @click="returnBack"
+      :icon-left="{ iconName: 'TriangleLeftIcon' }"
+    />
   </HelpOptionsContainer>
-  <div v-if="passwordInfo" class="main-container">
-    <p class="note">{{ t('password.available') }}</p>
-    <div class="show-copy-link-container">
-      <div class="link-container">
-        <p class="link">{{ fullLink }}</p>
+  <div class="d-flex flex-column align-start justify-space-around main-container">
+    <p class="note" v-if="passwordInfo">{{ t('password.available') }}</p>
+    <div class="d-flex flex-column align-center justify-space-between show-copy-link-container">
+      <div class="d-flex align-center justify-start link-container">
+        <p class="link">{{ passwordInfo ? fullLink : t('password.tryAgain') }}</p>
       </div>
-      <MainButton :on-click="copyLink" class="violet copy-btn">{{ t('buttons.copy') }}</MainButton>
+      <ArealButton size="L" :text="t('buttons.copy')" width="100%" @click="copyLink" />
     </div>
   </div>
-  <div v-if="!passwordInfo" class="main-container">
-    <div class="show-copy-link-container">
-      <div class="link-container">
-        <p class="link">{{ t('password.tryAgain') }}</p>
-      </div>
-    </div>
-  </div>
-  <Modal :copied="copied" :deleted="''">{{ t('modal.linkCopied') }}</Modal>
-  <Modal :copied="''" :deleted="deleted">{{ t('modal.passwordDeleted') }}</Modal>
+  <ArealSnackbar
+    v-show="copied"
+    icon
+    iconName="Copy"
+    type="success"
+    :text="t('modal.linkCopied')"
+    size="L"
+    class="snackbar"
+  />
+  <ArealSnackbar
+    v-show="deleted"
+    icon
+    iconName="CheckCircle"
+    type="success"
+    :text="t('modal.passwordDeleted')"
+    size="L"
+    class="snackbar"
+  />
 </template>
 
 <script setup lang="ts">
@@ -40,8 +58,8 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
-const copied = ref('')
-const deleted = ref('')
+const copied = ref(false)
+const deleted = ref(false)
 
 const link = route.params.link
 const passwordInfo = computed(() => store.state.passwordInfo?.[link] || null)
@@ -54,51 +72,36 @@ const fullLink = computed(() =>
 
 const deleteSecretPhrase = () => {
   store.dispatch('secretForm/deleteSecretPhrase', link)
-  deleted.value = 'deleted'
+  deleted.value = true
   setTimeout(() => {
-    deleted.value = ''
-  }, 1000)
+    deleted.value = false
+  }, 3000)
 }
 const copyLink = () => {
-  navigator.clipboard.writeText(fullLink.value)
-  copied.value = 'active'
+  navigator.clipboard.writeText(fullLink.value || '')
+  copied.value = true
   setTimeout(() => {
-    copied.value = ''
-  }, 1000)
+    copied.value = false
+  }, 3000)
 }
 const returnBack = () => router.push('/')
 </script>
 
 <style scoped>
 .main-container {
-  display: flex;
   width: 100%;
-  flex-direction: column;
-  align-items: start;
-  justify-content: space-around;
 }
 .show-copy-link-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
   gap: 16px;
   width: 100%;
 }
-.copy-btn,
 .link-container {
   width: 100%;
   height: 62px;
-}
-.link-container {
-  display: flex;
-  align-items: center;
   overflow-x: auto;
-  justify-content: start;
   padding: 0 16px;
-  background: rgba(191, 206, 243, 0.7);
-  border: solid 2px #4d5bf3;
-  border-radius: 0.7rem;
+  background: #fff;
+  border: solid 2px #0082c5;
   box-shadow:
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -110,10 +113,19 @@ const returnBack = () => router.push('/')
 .note {
   margin-bottom: 16px;
 }
+.snackbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1000px;
+  transform: translateY(-200%);
+}
 @media (max-width: 1001px) {
-  .show-copy-link-container {
-    flex-direction: column;
-    gap: 16px;
+  .snackbar {
+    position: fixed;
+    top: 0;
+    left: 20px;
+    transform: translateY(350%);
   }
   .main-container {
     padding: 24px;

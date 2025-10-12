@@ -15,8 +15,8 @@ import { createAreal } from '@areal/components-vuetify2/src'
 
 const bootstrap = async () => {
   const i18n = createI18n({
-    locale: 'en',
-    fallbackLocale: 'ru',
+    locale: 'ru',
+    fallbackLocale: 'en',
     messages: {
       en: {
         ...enApp,

@@ -5,7 +5,13 @@
         class="d-flex flex-column justify-center align-center areal-bg--gray--lighten2 form-secret-phrase-container"
       >
         <RouterView />
-        <ArealButton
+        <ArealLangSwitcher
+          class="change-lang-btn lang-switcher"
+          current="ru"
+          :locales="locales"
+          @change="(e) => (locale = e)"
+        />
+        <!--        <ArealButton
           v-if="isRu"
           text="EN"
           size="M"
@@ -20,7 +26,8 @@
           :primary="false"
           @click="() => (locale = 'ru')"
           class="change-lang-btn"
-        ></ArealButton>
+        ></ArealButton>-->
+        <!-- второй вариант переключения языка-->
         <ArealNotificationPanel
           :closable="true"
           :show="error"
@@ -32,7 +39,6 @@
           :title="t('help.errorTitle')"
           :text="t('help.errorText')"
         />
-        <!-- todo про transition-->
         <div v-show="loading">
           <ArealLineLoader top="10px" />
         </div>
@@ -52,8 +58,9 @@ const loading = computed(() => store.state.loading)
 const error = computed(() => store.state.error)
 
 const { locale, t } = useI18n()
+const locales = ['ru', 'en']
 
-const isRu = computed(() => locale.value === 'ru')
+/*const isRu = computed(() => locale.value === 'ru')*/ //: переменная для второго переключения языка
 </script>
 
 <style scoped>
@@ -73,6 +80,11 @@ const isRu = computed(() => locale.value === 'ru')
   position: fixed;
   top: 50px;
   right: 40px;
+}
+.lang-switcher {
+  padding: 16px 20px 16px 40px;
+  border: 2px solid #0082c5;
+  background: #fff;
 }
 .help {
   position: fixed;
