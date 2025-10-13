@@ -1,7 +1,6 @@
 <template>
-  <HelpOptionsContainer />
-  <div v-if="!notFound" class="d-flex flex-column align-start response-container">
-    <p v-if="passwordIsLive">{{ t('yourPassword.message') }}</p>
+  <ArealForm v-if="!notFound" class="d-flex flex-column align-start response-container">
+    <HelpOptionsContainer />
     <ArealInput
       size="L"
       readonly
@@ -23,8 +22,12 @@
       :text="t('buttons.copy')"
       @click="copyPassword"
     />
-  </div>
-  <ArealNotFound v-if="notFound" />
+  </ArealForm>
+  <ArealForm v-if="notFound" class="d-flex flex-column align-start response-container">
+    <HelpOptionsContainer />
+    <ArealNotFound style="height: auto" v-if="notFound" />
+  </ArealForm>
+
   <ArealSnackbar
     v-show="copied"
     icon
@@ -95,14 +98,6 @@ onBeforeUnmount(() => clearTimeout(timeoutId.value))
   font-size: 20px;
   white-space: nowrap;
 }
-.secret-phrase-container {
-  width: 100%;
-  height: 62px;
-  overflow-x: auto;
-  padding: 0 16px;
-  background: #fff;
-  border: solid 2px #0082c5;
-}
 .snackbar {
   position: absolute;
   top: 0;
@@ -116,9 +111,6 @@ onBeforeUnmount(() => clearTimeout(timeoutId.value))
     top: 0;
     left: 20px;
     transform: translateY(350%);
-  }
-  .secret-phrase-container {
-    overflow: auto;
   }
   .response-container {
     padding: 30px;

@@ -1,5 +1,5 @@
 <template>
-  <form class="d-flex align-start form-container" @submit.prevent="setSecretPhrase">
+  <ArealForm class="d-flex align-start form-container">
     <div class="d-flex flex-column justify-start align-center ga-10 left-form-part">
       <ArealInput
         :value="secretPhrase"
@@ -10,12 +10,14 @@
         style="width: 90%"
       />
       <ArealButton
-        type="submit"
+        type="buttonf"
         size="L"
         width="90%"
         :text="t('buttons.pass')"
         :disabled="!secretPhrase"
         :loading="loading"
+        :bg="false"
+        @click="setSecretPhrase"
       />
     </div>
     <ArealDivider class="divider" :vertical="true" />
@@ -78,7 +80,7 @@
         />
       </div>
     </div>
-  </form>
+  </ArealForm>
 </template>
 
 <script setup lang="js">

@@ -117,8 +117,8 @@ onBeforeUnmount(() => clearTimeout(timeoutId.value))
 
 <style scoped>
 .help-options-container {
+  position: relative;
   align-items: center;
-  position: absolute;
   top: 0;
   width: 100%;
 }
@@ -150,9 +150,6 @@ onBeforeUnmount(() => clearTimeout(timeoutId.value))
     gap: 16px;
     position: static;
     top: 0;
-  }
-  .help {
-    width: 250px;
   }
 }
 </style>

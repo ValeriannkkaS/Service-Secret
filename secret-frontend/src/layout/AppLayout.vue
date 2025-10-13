@@ -71,7 +71,6 @@ const locales = ['ru', 'en']
 }
 .form-secret-phrase-container {
   position: relative;
-  padding: 50px 50px 35px;
   width: 1000px;
   height: 285px;
 }

@@ -1,7 +1,7 @@
 <template>
-  <HelpOptionsContainer />
-  <div class="d-flex flex-column align-start justify-space-around main-container">
+  <ArealForm class="d-flex flex-column align-start justify-space-around main-container">
     <div class="d-flex flex-column align-center justify-space-between show-copy-link-container">
+      <HelpOptionsContainer />
       <ArealInput
         size="L"
         readonly
@@ -17,7 +17,7 @@
         @click="copyLink"
       />
     </div>
-  </div>
+  </ArealForm>
   <ArealSnackbar
     v-show="copied"
     icon
@@ -69,21 +69,6 @@ onBeforeUnmount(() => clearTimeout(timeoutId.value))
 .show-copy-link-container {
   gap: 16px;
   width: 100%;
-}
-.link-container {
-  width: 100%;
-  height: 62px;
-  overflow-x: auto;
-  padding: 0 16px;
-  background: #fff;
-  border: solid 2px #0082c5;
-}
-.link {
-  white-space: nowrap;
-  font-size: 20px;
-}
-.note {
-  margin-bottom: 16px;
 }
 .snackbar {
   position: absolute;
