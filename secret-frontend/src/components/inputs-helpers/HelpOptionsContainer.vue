@@ -1,18 +1,58 @@
 <template>
-  <div class="areal-bg--gray--lighten1 d-flex justify-space-between help-options-container">
-    <p v-if="passwordInfo && !lastView" class="help">
-      {{ t('options.passwordExpired') }} {{ date }} {{ t('options.orAfter') }}
-      {{ passwordInfo.remainingViewsCount }} {{ t('options.views') }}
-    </p>
-    <p v-if="lastView && passwordIsLive && passwordInfo" class="error">
-      {{ t('options.lastView') }}
-    </p>
-    <p v-if="!passwordIsLive && !passwordInfo && !notFound" class="error">
-      {{ t('options.alreadyExpiredOrDeleted') }}
-    </p>
-    <p v-if="notFound" class="error">{{ t('options.nonePassword') }}</p>
+  <div class="d-flex justify-space-between help-options-container">
+    <ArealNotificationPanel
+      v-if="passwordInfo && !lastView"
+      icon
+      iconName="infoSquare"
+      size="M"
+      style="width: 100%"
+      :title="t('options.infoPassword')"
+      :text="`${t('options.passwordExpired')} ${date} ${t('options.orAfter')} ${passwordInfo.remainingViewsCount} ${t('options.views')} `"
+      type="infoType"
+    ></ArealNotificationPanel>
+    <ArealNotificationPanel
+      v-if="lastView && passwordIsLive && passwordInfo"
+      icon
+      iconName="DangerCircle"
+      size="M"
+      style="width: 100%"
+      :title="t('options.warning')"
+      :text="t('options.lastView')"
+      type="warningType"
+    ></ArealNotificationPanel>
+    <ArealNotificationPanel
+      v-if="!passwordIsLive && !passwordInfo && !notFound"
+      icon
+      iconName="DangerCircle"
+      size="M"
+      style="width: 100%"
+      :title="t('options.notFound')"
+      :text="t('options.alreadyExpiredOrDeleted')"
+      type="errorType"
+    ></ArealNotificationPanel>
+    <ArealNotificationPanel
+      v-if="notFound"
+      icon
+      iconName="DangerCircle"
+      size="M"
+      style="width: 100%"
+      :title="t('options.notFound')"
+      :text="t('options.nonePassword')"
+      type="errorType"
+    ></ArealNotificationPanel>
     <div class="options-buttons-container1">
-      <ArealButton
+      <ArealLink
+        v-if="allowDeletions"
+        :text="t('buttons.delete')"
+        :icon-left="{ iconName: 'DeleteIcon' }"
+        @click="deleteSecretPhrase"
+      />
+      <ArealLink
+        :text="t('buttons.tryAgain')"
+        @click="() => router.push('/')"
+        :icon-left="{ iconName: 'TriangleLeftIcon' }"
+      />
+      <!--      <ArealButton
         :primary="false"
         size="XS"
         :text="t('buttons.delete')"
@@ -26,7 +66,7 @@
         :text="t('buttons.tryAgain')"
         @click="() => router.push('/')"
         :icon-left="{ iconName: 'TriangleLeftIcon' }"
-      />
+      />-->
     </div>
     <ArealSnackbar
       v-show="deleted"
@@ -80,15 +120,14 @@ onBeforeUnmount(() => clearTimeout(timeoutId.value))
   align-items: center;
   position: absolute;
   top: 0;
-  padding: 10px 50px;
   width: 100%;
 }
 .options-buttons-container1 {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
   display: flex;
   gap: 17px;
-}
-.error {
-  color: #ca0101;
 }
 .snackbar {
   position: absolute;
@@ -107,7 +146,6 @@ onBeforeUnmount(() => clearTimeout(timeoutId.value))
   .help-options-container {
     flex-direction: column;
     align-items: start;
-
     justify-content: center;
     gap: 16px;
     position: static;

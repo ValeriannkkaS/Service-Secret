@@ -133,6 +133,7 @@ const setSecretPhrase = async () => {
   const redirect = await store.dispatch('secretForm/setSecretPhrase')
   if (redirect) {
     store.commit('secretPhraseResponse/setPasswordIsLive', true)
+    store.commit('secretPhraseResponse/setNotFound', false)
     router.push(`/show/${link.value}`)
   }
 }

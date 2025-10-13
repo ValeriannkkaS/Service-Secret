@@ -1,12 +1,12 @@
 <template>
   <ArealApp>
-    <div class="background d-flex justify-center align-center areal-bg--gray">
+    <div class="background d-flex justify-center align-center areal-bg--white">
       <div
-        class="d-flex flex-column justify-center align-center areal-bg--gray--lighten2 form-secret-phrase-container"
+        class="d-flex flex-column justify-center align-center areal-bg--gray--lighten3 form-secret-phrase-container"
       >
         <RouterView />
         <ArealLangSwitcher
-          class="change-lang-btn lang-switcher"
+          class="change-lang-btn"
           current="ru"
           :locales="locales"
           @change="(e) => (locale = e)"
@@ -74,7 +74,6 @@ const locales = ['ru', 'en']
   padding: 50px 50px 35px;
   width: 1000px;
   height: 285px;
-  box-shadow: 5px 5px 10px rgba(121, 121, 121, 0.63);
 }
 .change-lang-btn {
   position: fixed;

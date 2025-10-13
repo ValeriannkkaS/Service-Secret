@@ -54,7 +54,7 @@ export default {
       return response
     } catch (err) {
       commit('setError', true, { root: true })
-      setTimeout(() => commit('setError', false, { root: true }), 3000)
+      setTimeout(() => commit('setError', false, { root: true }), 10000)
     } finally {
       commit('setLoading', false, { root: true })
     }
