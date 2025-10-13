@@ -1,11 +1,14 @@
 <template>
   <HelpOptionsContainer />
   <div class="d-flex flex-column align-start justify-space-around main-container">
-    <p class="note" v-if="passwordInfo">{{ t('password.available') }}</p>
     <div class="d-flex flex-column align-center justify-space-between show-copy-link-container">
-      <div class="d-flex align-center justify-start link-container">
-        <p class="link">{{ passwordInfo ? fullLink : t('password.tryAgain') }}</p>
-      </div>
+      <ArealInput
+        size="L"
+        readonly
+        style="width: 100%; border: 2px solid #0082c5"
+        :label="passwordInfo ? t('password.available') : ''"
+        :value="passwordInfo ? fullLink : t('password.tryAgain')"
+      />
       <ArealButton
         v-if="fullLink"
         size="L"

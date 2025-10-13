@@ -2,17 +2,13 @@
   <HelpOptionsContainer />
   <div v-if="!notFound" class="d-flex flex-column align-start response-container">
     <p v-if="passwordIsLive">{{ t('yourPassword.message') }}</p>
-    <div class="d-flex align-center justify-start secret-phrase-container">
-      <div v-if="secretPhrase && show && passwordIsLive">
-        <p>{{ secretPhrase }}</p>
-      </div>
-      <div v-if="!show && passwordIsLive">
-        <p>********</p>
-      </div>
-      <div v-if="!passwordIsLive">
-        <p>{{ t('password.tryAgain') }}</p>
-      </div>
-    </div>
+    <ArealInput
+      size="L"
+      readonly
+      style="width: 100%; border: 2px solid #0082c5"
+      :label="passwordLabel"
+      :value="passwordValue"
+    />
     <ArealButton
       v-if="!show && passwordIsLive"
       size="L"
@@ -57,6 +53,17 @@ const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.li
 const show = computed(() => store.state.secretPhraseResponse.show)
 const notFound = computed(() => store.state.secretPhraseResponse.notFound)
 const passwordIsLive = computed(() => store.state.secretPhraseResponse.passwordIsLive)
+
+const passwordValue = computed(() =>
+  secretPhrase.value && show.value && passwordIsLive.value
+    ? secretPhrase.value
+    : !show.value && passwordIsLive.value
+      ? '********'
+      : !passwordIsLive.value
+        ? t('password.tryAgain')
+        : t('help.errorText'),
+)
+const passwordLabel = computed(() => (!passwordIsLive.value ? '' : t('yourPassword.message')))
 
 const checkSecretPhrase = async () =>
   store.dispatch('secretPhraseResponse/checkSecretPhrase', route.params.link)
