@@ -7,7 +7,7 @@
       size="M"
       style="width: 100%"
       :title="t('options.infoPassword')"
-      :text="`${t('options.passwordExpired')} ${date} ${t('options.orAfter')} ${passwordInfo.remainingViewsCount} ${t('options.views')} `"
+      :text="`${t('options.passwordExpired')} ${date} ${time} (UTC ${timeZone < 0 ? '+' : '-'}${Math.abs(timeZone)}) ${t('options.orAfter')} ${passwordInfo.remainingViewsCount} ${t('options.views')} `"
       type="infoType"
     ></ArealNotificationPanel>
     <ArealNotificationPanel
@@ -68,6 +68,7 @@
         :icon-left="{ iconName: 'TriangleLeftIcon' }"
       />-->
     </div>
+
     <ArealSnackbar
       v-show="deleted"
       icon
@@ -86,18 +87,38 @@ import { computed, onBeforeUnmount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { getTimezone } from '@/utils/timezone.js'
 
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const deleted = ref(false)
 const timeoutId = ref(null)
 
+const timeZone = ref(null)
+timeZone.value = new Date().getTimezoneOffset() / 60 // часовой пояс, напрмер 3 или -8
+
+const expiresAt = computed(() => passwordInfo?.value?.expiresAt) // с API приходит - пример - 2025-10-19T10:55:01.990Z
+
+/**
+ * `${locale.value}-${locale.value.toUpperCase()}`
+ * здесь также поставляется значение локали, то есть если приложение открыто на английском, то подставляется en-EN,
+ * если на русском, то ru-RU. При добавлении новых локалей будет работать и дальше
+ */
+const date = computed(() =>
+  new Date(expiresAt?.value).toLocaleDateString(`${locale.value}-${locale.value.toUpperCase()}`, {
+    timeZone: getTimezone(timeZone.value), //получившееся значение
+  }),
+)
+const time = computed(() =>
+  new Date(expiresAt?.value).toLocaleTimeString(`${locale.value}-${locale.value.toUpperCase()}`, {
+    timeZone: getTimezone(timeZone.value), //получившееся значение
+  }),
+)
+
 const link = route.params.link
 const passwordInfo = computed(() => store.state?.passwordInfo?.[link])
-const expiresAt = computed(() => passwordInfo?.value?.expiresAt)
-const date = computed(() => new Date(expiresAt?.value).toLocaleDateString())
 const lastView = computed(() => passwordInfo?.value?.remainingViewsCount === 0)
 const passwordIsLive = computed(() => store.state.secretPhraseResponse?.passwordIsLive)
 const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.link]?.allowDeletions)
