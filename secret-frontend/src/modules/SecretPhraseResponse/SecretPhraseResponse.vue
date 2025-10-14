@@ -25,7 +25,7 @@
   </ArealForm>
   <ArealForm v-if="notFound" class="d-flex flex-column align-start response-container">
     <HelpOptionsContainer />
-    <ArealNotFound style="height: auto" v-if="notFound" />
+    <ArealNotFound style="height: auto; width: 100%" v-if="notFound" />
   </ArealForm>
 
   <ArealSnackbar
@@ -52,7 +52,6 @@ const { t } = useI18n()
 const copied = ref(false)
 const timeoutId = ref(null)
 const secretPhrase = computed(() => store.state.secretPhraseResponse.secretPhrase)
-const allowDeletions = computed(() => store.state.passwordInfo?.[route.params.link]?.allowDeletions)
 const show = computed(() => store.state.secretPhraseResponse.show)
 const notFound = computed(() => store.state.secretPhraseResponse.notFound)
 const passwordIsLive = computed(() => store.state.secretPhraseResponse.passwordIsLive)

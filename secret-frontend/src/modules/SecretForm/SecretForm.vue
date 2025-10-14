@@ -1,32 +1,31 @@
 <template>
   <ArealForm class="d-flex align-start form-container">
-    <div class="d-flex flex-column justify-start align-center ga-10 left-form-part">
+    <div class="d-flex flex-column justify-start align-start ga-10 left-form-part">
       <ArealInput
         :value="secretPhrase"
         @input="(e) => (secretPhrase = e)"
         :label="t('formNote.label')"
         :required="true"
         size="L"
-        style="width: 90%"
+        class="input"
       />
       <ArealButton
-        type="buttonf"
+        type="button"
         size="L"
-        width="90%"
+        class="submit-btn"
         :text="t('buttons.pass')"
         :disabled="!secretPhrase"
         :loading="loading"
-        :bg="false"
         @click="setSecretPhrase"
       />
     </div>
     <ArealDivider class="divider" :vertical="true" />
-    <div class="d-flex flex-column justify-start align-center ga-6 right-form-part">
+    <div class="d-flex flex-column justify-start align-end ga-6 right-form-part">
       <div class="d-flex ga-4 right-form-part-options-container">
         <ArealButton
           type="button"
-          size="XS"
-          width="50%"
+          :size="isMobile ? 'L' : 'XS'"
+          class="generate-btn"
           :text="t('buttons.generate')"
           @click="generateSecret"
         />
@@ -35,8 +34,8 @@
           :value="countOfSymbols"
           text-param="label"
           value-param="value"
-          size="XS"
-          style="width: 50%"
+          :size="isMobile ? 'L' : 'XS'"
+          class="dropbox"
           :label="t('dropboxText.labelCountOfSymbols')"
           :clearButton="false"
           :no-search="true"
@@ -51,8 +50,8 @@
           :value="expiresIn"
           text-param="label"
           value-param="value"
-          size="XS"
-          style="width: 50%"
+          :size="isMobile ? 'L' : 'XS'"
+          class="dropbox"
           :label="t('dropboxText.labelCountOfDays')"
           :clearButton="false"
           :no-search="true"
@@ -63,8 +62,8 @@
           :value="countOfViews"
           text-param="label"
           value-param="value"
-          size="XS"
-          style="width: 50%"
+          :size="isMobile ? 'L' : 'XS'"
+          class="dropbox"
           :label="t('dropboxText.labelCountOfViews')"
           :clearButton="false"
           :no-search="true"
@@ -84,7 +83,7 @@
 </template>
 
 <script setup lang="js">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -95,6 +94,7 @@ const router = useRouter()
 const { t } = useI18n()
 
 const secretPhrase = ref(null)
+const isMobile = ref(window.innerWidth < 1001)
 
 const itemsCountOfSymbols = computed(() => [
   { label: `8 ${t('dropboxText.symbols')}`, value: 8 },
@@ -143,6 +143,16 @@ const generateSecret = async () => {
   const response = await store.dispatch('secretForm/generateSecretPhrase')
   secretPhrase.value = response.secretPhrase
 }
+function handleResize() {
+  isMobile.value = window.innerWidth < 1001
+}
+
+onMounted(() => {
+  window.addEventListener('resize', handleResize)
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
 watch(secretPhrase, () => {
   store.commit('secretForm/setSecretPhrase', secretPhrase.value)
 })
@@ -158,8 +168,16 @@ watch(secretPhrase, () => {
   height: 100%;
   width: 100%;
 }
-.right-form-part-options-container {
-  width: 90%;
+.right-form-part-options-container,
+.input {
+  width: 95%;
+}
+.submit-btn {
+  width: 95% !important;
+}
+.dropbox,
+.generate-btn {
+  width: 50% !important;
 }
 @media (max-width: 1001px) {
   .form-container {
@@ -174,6 +192,19 @@ watch(secretPhrase, () => {
   .right-form-part {
     height: auto;
     flex: none;
+  }
+  .right-form-part {
+    align-items: center !important;
+  }
+  .right-form-part-options-container {
+    flex-direction: column;
+    width: 100%;
+  }
+  .dropbox,
+  .generate-btn,
+  .input,
+  .submit-btn {
+    width: 100% !important;
   }
 }
 </style>

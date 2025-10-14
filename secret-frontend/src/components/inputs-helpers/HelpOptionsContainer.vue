@@ -148,8 +148,10 @@ onBeforeUnmount(() => clearTimeout(timeoutId.value))
     align-items: start;
     justify-content: center;
     gap: 16px;
-    position: static;
+    position: relative;
     top: 0;
+  }
+  .options-buttons-container1 {
   }
 }
 </style>
