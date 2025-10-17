@@ -26,5 +26,11 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
 
+  ui_style:
+    image: ${PLATFORM_UI_STYLE_IMAGE}:${PLATFORM_UI_STYLE_TAG}
+    container_name: styles
+    ports:
+      - 8080:80
+
 volumes:
   secret_service_postgres_data:
